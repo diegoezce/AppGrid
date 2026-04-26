@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AppGrid — Convertí tus apps en ingresos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ─────────────────────────── PRINT STYLES */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        background: var(--ag-bg) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      /* Force backgrounds/colors on all elements */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Sticky nav becomes static for print */
+      .ag-nav {
+        position: static !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      /* Tighten section padding for print */
+      .ag-section {
+        padding: 56px 0 !important;
+        break-inside: avoid;
+      }
+
+      .ag-hero {
+        padding: 48px 0 64px !important;
+        break-after: page;
+      }
+
+      /* Avoid splitting cards across pages */
+      .ag-prob-card,
+      .ag-step,
+      .ag-ben-card,
+      .ag-case-card,
+      .ag-test-card,
+      .ag-faq-item,
+      .ag-cta-card,
+      .ag-grid-card,
+      .ag-term-card,
+      .ag-sol-side {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* Section heads stay with their content */
+      .ag-sec-head {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      /* Major section breaks */
+      .ag-section-dark { break-before: auto; break-inside: avoid; }
+      #cta { break-before: page; }
+
+      /* Remove hover-based transforms and shadows for cleaner print */
+      .ag-app-card, .ag-step, .ag-ben-card, .ag-test-card {
+        transform: none !important;
+        animation: none !important;
+      }
+
+      /* Make sure the dark section prints with its background */
+      .ag-section-dark {
+        background: var(--ag-ink) !important;
+        color: #f4f3ee !important;
+      }
+      .ag-cta-card {
+        background: var(--ag-ink) !important;
+        color: #fafaf7 !important;
+      }
+      .ag-cta .ag-btn-primary {
+        background: var(--ag-accent) !important;
+      }
+
+      /* Hide tweaks panel if it ever rendered */
+      .twk-panel { display: none !important; }
+
+      /* Ensure FAQ items are all open in print */
+      .ag-faq-a {
+        grid-template-rows: 1fr !important;
+      }
+      .ag-faq-a > p {
+        padding: 0 0 24px !important;
+      }
+      .ag-faq-icon {
+        display: none !important;
+      }
+
+      /* Ensure full-bleed dark sections fill the page width */
+      body { margin: 0 !important; }
+
+      /* No-break for grid heads */
+      .ag-grid-head, .ag-term-head { break-after: avoid; }
+
+      /* Ensure colored thumbs print */
+      .ag-app-thumb, .ag-ben-icon, .ag-case-icon, .ag-h1-accent, .ag-dot, .ag-grid-dot,
+      .ag-sol-list li svg, .ag-sol-lede em, .ag-cta-grid > span,
+      .ag-test-avatar, .ag-logo-mark, .ag-logo-mark > span:nth-child(4),
+      .ag-step-icon {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
+    /* Screen layout fallback when viewing the print html directly */
+    @media screen {
+      body { background: var(--ag-bg, #FAFAF7); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+
+  <script type="text/babel" data-presets="env,react">
+    // Auto-print once everything is ready: React rendered, fonts loaded, then small buffer.
+    (async () => {
+      // Wait for the React root to render content
+      const waitForRender = () => new Promise((resolve) => {
+        const start = Date.now();
+        const check = () => {
+          const root = document.getElementById('root');
+          if (root && root.children.length > 0) return resolve();
+          if (Date.now() - start > 5000) return resolve();
+          requestAnimationFrame(check);
+        };
+        check();
+      });
+
+      await waitForRender();
+
+      // Wait for fonts
+      if (document.fonts && document.fonts.ready) {
+        try { await document.fonts.ready; } catch (e) {}
+      }
+
+      // Wait for all images to load
+      const imgs = Array.from(document.images || []);
+      await Promise.all(imgs.map(img =>
+        img.complete ? Promise.resolve() : new Promise(res => {
+          img.addEventListener('load', res, { once: true });
+          img.addEventListener('error', res, { once: true });
+        })
+      ));
+
+      // Final buffer for layout settle
+      await new Promise(r => setTimeout(r, 700));
+
+      window.print();
+    })();
+  </script>
+</body>
+</html>

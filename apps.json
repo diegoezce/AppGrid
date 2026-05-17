@@ -1,0 +1,52 @@
+[
+  {
+    "id": "1",
+    "title": "GoPlanify",
+    "description": "Planificador inteligente para gestionar tus proyectos y tareas diarias con metodología ágil.",
+    "category": "productivity",
+    "image_url": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
+    "app_url": "https://goplanify.example.com",
+    "price": "9.99",
+    "created_at": "2026-05-17T00:00:00Z"
+  },
+  {
+    "id": "2",
+    "title": "Meal Prep GoPlanify",
+    "description": "Gestor de comidas y planes de nutrición para optimizar tu tiempo en la cocina.",
+    "category": "health",
+    "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop",
+    "app_url": "https://mealprep.example.com",
+    "price": "4.99",
+    "created_at": "2026-05-17T00:00:00Z"
+  },
+  {
+    "id": "3",
+    "title": "Fidelis",
+    "description": "Sistema de gestión de lealtad y recompensas para negocios pequeños.",
+    "category": "finance",
+    "image_url": "https://images.unsplash.com/photo-1579621970563-430f63602022?w=400&h=300&fit=crop",
+    "app_url": "https://fidelis.example.com",
+    "price": "19.99",
+    "created_at": "2026-05-17T00:00:00Z"
+  },
+  {
+    "id": "4",
+    "title": "Students Manager",
+    "description": "Plataforma completa para gestionar estudiantes, calificaciones y reportes académicos.",
+    "category": "education",
+    "image_url": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
+    "app_url": "https://studentsmgr.example.com",
+    "price": "29.99",
+    "created_at": "2026-05-17T00:00:00Z"
+  },
+  {
+    "id": "5",
+    "title": "Global Prayer App",
+    "description": "App de oración global que conecta comunidades de fe alrededor del mundo.",
+    "category": "general",
+    "image_url": "https://images.unsplash.com/photo-1516321318423-f06f70259b51?w=400&h=300&fit=crop",
+    "app_url": "https://globalprayer.example.com",
+    "price": "0",
+    "created_at": "2026-05-17T00:00:00Z"
+  }
+]

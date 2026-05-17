@@ -9,3 +9,13 @@ venv/
 .DS_Store
 node_modules/
 .next/
+out/
+build/
+*.log
+.env.local
+.env.*.local
+.vercel
+.idea/
+*.swp
+*.swo
+*~

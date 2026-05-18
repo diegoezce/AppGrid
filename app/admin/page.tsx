@@ -269,7 +269,7 @@ export default function AdminPage() {
                 onChange={handleChange}
                 className="ag-input"
                 min="0"
-                step="0.99"
+                step="0.01"
               />
             </div>
           </div>

@@ -1,8 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import './admin.css'
+
+interface App {
+  id: string
+  title: string
+  description: string
+  category: string
+  image_url?: string
+  app_url: string
+  price: string
+  created_at?: string
+}
 
 export default function AdminPage() {
   const [formData, setFormData] = useState({
@@ -12,14 +23,34 @@ export default function AdminPage() {
     image_url: '',
     app_url: '',
     price: '0',
-    password: '',
   })
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [authPassword, setAuthPassword] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [apps, setApps] = useState<App[]>([])
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [showForm, setShowForm] = useState(true)
 
   const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchApps()
+    }
+  }, [isAuthenticated])
+
+  const fetchApps = async () => {
+    try {
+      const response = await fetch('/api/apps')
+      if (response.ok) {
+        const data = await response.json()
+        setApps(data)
+      }
+    } catch (error) {
+      console.error('Error fetching apps:', error)
+    }
+  }
 
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault()
@@ -43,14 +74,18 @@ export default function AdminPage() {
     setMessage('')
 
     try {
-      const response = await fetch('/api/apps', {
-        method: 'POST',
+      const method = editingId ? 'PUT' : 'POST'
+      const url = '/api/apps'
+      const body = editingId ? { ...formData, id: editingId } : formData
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(body),
       })
 
       if (response.ok) {
-        setMessage('✅ App publicada exitosamente!')
+        setMessage(editingId ? '✅ App actualizada!' : '✅ App publicada!')
         setFormData({
           title: '',
           description: '',
@@ -58,17 +93,64 @@ export default function AdminPage() {
           image_url: '',
           app_url: '',
           price: '0',
-          password: '',
         })
+        setEditingId(null)
+        fetchApps()
         setTimeout(() => setMessage(''), 3000)
       } else {
-        setMessage('❌ Error al publicar la app')
+        setMessage('❌ Error al guardar la app')
       }
     } catch (error) {
       setMessage('❌ Error de conexión')
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleEdit = (app: App) => {
+    setFormData({
+      title: app.title,
+      description: app.description,
+      category: app.category,
+      image_url: app.image_url || '',
+      app_url: app.app_url,
+      price: app.price,
+    })
+    setEditingId(app.id)
+    setShowForm(true)
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('¿Estás seguro que querés eliminar esta app?')) return
+
+    try {
+      const response = await fetch(`/api/apps?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setMessage('✅ App eliminada!')
+        fetchApps()
+        setTimeout(() => setMessage(''), 3000)
+      } else {
+        setMessage('❌ Error al eliminar la app')
+      }
+    } catch (error) {
+      setMessage('❌ Error de conexión')
+    }
+  }
+
+  const handleCancel = () => {
+    setEditingId(null)
+    setFormData({
+      title: '',
+      description: '',
+      category: 'general',
+      image_url: '',
+      app_url: '',
+      price: '0',
+    })
+    setShowForm(false)
   }
 
   if (!isAuthenticated) {
@@ -103,7 +185,7 @@ export default function AdminPage() {
       <div className="ag-admin-header">
         <div>
           <h1>Panel de Admin</h1>
-          <p>Publica tu app en AppGrid</p>
+          <p>{apps.length} apps publicadas</p>
         </div>
         <button className="ag-btn ag-btn-ghost" onClick={() => setIsAuthenticated(false)}>
           Salir
@@ -111,6 +193,24 @@ export default function AdminPage() {
       </div>
 
       <div className="ag-admin-content">
+        {/* Tabs */}
+        <div className="ag-admin-tabs">
+          <button
+            className={`ag-tab ${showForm ? 'active' : ''}`}
+            onClick={() => { setShowForm(true); handleCancel(); }}
+          >
+            {editingId ? '✏️ Editar app' : '➕ Nueva app'}
+          </button>
+          <button
+            className={`ag-tab ${!showForm ? 'active' : ''}`}
+            onClick={() => setShowForm(false)}
+          >
+            📋 Ver todas ({apps.length})
+          </button>
+        </div>
+
+        {/* Formulario */}
+        {showForm && (
         <form onSubmit={handleSubmit} className="ag-admin-form">
           <div className="ag-form-group">
             <label htmlFor="title">Nombre de la app *</label>
@@ -207,15 +307,79 @@ export default function AdminPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            className="ag-btn ag-btn-primary"
-            style={{ width: '100%', padding: '1rem' }}
-            disabled={loading}
-          >
-            {loading ? 'Publicando...' : '✨ Publicar app'}
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button
+              type="submit"
+              className="ag-btn ag-btn-primary"
+              style={{ flex: 1, padding: '1rem' }}
+              disabled={loading}
+            >
+              {loading ? 'Guardando...' : editingId ? '💾 Guardar cambios' : '✨ Publicar app'}
+            </button>
+            {editingId && (
+              <button
+                type="button"
+                className="ag-btn ag-btn-ghost"
+                style={{ padding: '1rem', minWidth: '120px' }}
+                onClick={handleCancel}
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
         </form>
+        )}
+
+        {/* Lista de apps */}
+        {!showForm && (
+          <div className="ag-apps-list">
+            {apps.length === 0 ? (
+              <div className="ag-empty-state">
+                <p>No hay apps publicadas yet</p>
+                <button className="ag-btn ag-btn-primary" onClick={() => setShowForm(true)}>
+                  ➕ Crear la primera app
+                </button>
+              </div>
+            ) : (
+              <table className="ag-table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {apps.map(app => (
+                    <tr key={app.id}>
+                      <td>
+                        <strong>{app.title}</strong><br />
+                        <small>{app.description.substring(0, 50)}...</small>
+                      </td>
+                      <td>{app.category}</td>
+                      <td>{app.price === '0' ? 'Gratis' : `$${app.price}`}</td>
+                      <td className="ag-table-actions">
+                        <button
+                          className="ag-btn-sm ag-btn-edit"
+                          onClick={() => handleEdit(app)}
+                        >
+                          ✏️ Editar
+                        </button>
+                        <button
+                          className="ag-btn-sm ag-btn-delete"
+                          onClick={() => handleDelete(app.id)}
+                        >
+                          🗑️ Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

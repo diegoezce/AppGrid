@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 700px;
+  max-width: 1000px;
   margin: 0 auto 3rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--ag-line);
@@ -35,8 +35,35 @@
 }
 
 .ag-admin-content {
-  max-width: 700px;
+  max-width: 1000px;
   margin: 0 auto;
+}
+
+.ag-admin-tabs {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--ag-line);
+  margin-bottom: 2rem;
+}
+
+.ag-tab {
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  color: var(--ag-ink-3);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.ag-tab:hover {
+  color: var(--ag-ink);
+}
+
+.ag-tab.active {
+  color: var(--ag-ink);
+  border-bottom-color: var(--ag-accent);
 }
 
 .ag-auth-form {
@@ -104,6 +131,97 @@
   color: #742A2A;
 }
 
+.ag-apps-list {
+  background: white;
+  border: 1px solid var(--ag-line);
+  border-radius: var(--ag-radius);
+  overflow: hidden;
+}
+
+.ag-empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: var(--ag-ink-3);
+}
+
+.ag-empty-state p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.ag-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ag-table thead {
+  background: var(--ag-line-2);
+  border-bottom: 1px solid var(--ag-line);
+}
+
+.ag-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--ag-ink-2);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ag-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--ag-line-2);
+  color: var(--ag-ink);
+}
+
+.ag-table tbody tr:hover {
+  background: var(--ag-line-2);
+}
+
+.ag-table small {
+  color: var(--ag-ink-3);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.ag-table-actions {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.ag-btn-sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--ag-line);
+  border-radius: var(--ag-radius-sm);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.ag-btn-edit {
+  color: var(--ag-ink);
+  border-color: var(--ag-line);
+}
+
+.ag-btn-edit:hover {
+  background: #E8F5E9;
+  border-color: #81C784;
+}
+
+.ag-btn-delete {
+  color: #D32F2F;
+  border-color: #FFCDD2;
+}
+
+.ag-btn-delete:hover {
+  background: #FFEBEE;
+  border-color: #D32F2F;
+}
+
 @media (max-width: 768px) {
   .ag-admin-header {
     flex-direction: column;
@@ -117,5 +235,26 @@
 
   .ag-admin-form {
     padding: 1.5rem;
+  }
+
+  .ag-table {
+    font-size: 0.875rem;
+  }
+
+  .ag-table th,
+  .ag-table td {
+    padding: 0.75rem;
+  }
+
+  .ag-table-actions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .ag-admin-tabs {
+    gap: 0;
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding: 0 2rem;
   }
 }

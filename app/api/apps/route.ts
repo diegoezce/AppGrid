@@ -1,38 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile, writeFile } from 'fs/promises'
-import { join } from 'path'
-
-const APPS_FILE = join(process.cwd(), 'apps.json')
-
-interface App {
-  id: string
-  title: string
-  description: string
-  category: string
-  image_url?: string
-  app_url: string
-  price: string
-  created_at: string
-}
-
-async function getApps(): Promise<App[]> {
-  try {
-    const data = await readFile(APPS_FILE, 'utf-8')
-    return JSON.parse(data)
-  } catch {
-    return []
-  }
-}
-
-async function saveApps(apps: App[]): Promise<void> {
-  await writeFile(APPS_FILE, JSON.stringify(apps, null, 2))
-}
+import { supabase } from '@/lib/supabase'
 
 export async function GET() {
   try {
-    const apps = await getApps()
-    return NextResponse.json(apps)
+    const { data, error } = await supabase
+      .from('apps')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+    return NextResponse.json(data || [])
   } catch (error) {
+    console.error('Error fetching apps:', error)
     return NextResponse.json({ error: 'Error fetching apps' }, { status: 500 })
   }
 }
@@ -48,24 +27,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const apps = await getApps()
+    const { data, error } = await supabase
+      .from('apps')
+      .insert([
+        {
+          title: body.title,
+          description: body.description,
+          category: body.category || 'general',
+          image_url: body.image_url,
+          app_url: body.app_url,
+          price: body.price || '0',
+        },
+      ])
+      .select()
 
-    const newApp: App = {
-      id: Date.now().toString(),
-      title: body.title,
-      description: body.description,
-      category: body.category || 'general',
-      image_url: body.image_url,
-      app_url: body.app_url,
-      price: body.price || '0',
-      created_at: new Date().toISOString(),
-    }
-
-    apps.push(newApp)
-    await saveApps(apps)
-
-    return NextResponse.json(newApp, { status: 201 })
+    if (error) throw error
+    return NextResponse.json(data?.[0], { status: 201 })
   } catch (error) {
+    console.error('Error creating app:', error)
     return NextResponse.json({ error: 'Error creating app' }, { status: 500 })
   }
 }
@@ -76,35 +55,30 @@ export async function PUT(request: NextRequest) {
     const { id } = body
 
     if (!id) {
-      return NextResponse.json(
-        { error: 'Missing app id' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing app id' }, { status: 400 })
     }
 
-    const apps = await getApps()
-    const index = apps.findIndex(app => app.id === id)
+    const { data, error } = await supabase
+      .from('apps')
+      .update({
+        title: body.title,
+        description: body.description,
+        category: body.category,
+        image_url: body.image_url,
+        app_url: body.app_url,
+        price: body.price,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
 
-    if (index === -1) {
-      return NextResponse.json(
-        { error: 'App not found' },
-        { status: 404 }
-      )
+    if (error) throw error
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: 'App not found' }, { status: 404 })
     }
-
-    apps[index] = {
-      ...apps[index],
-      title: body.title || apps[index].title,
-      description: body.description || apps[index].description,
-      category: body.category || apps[index].category,
-      image_url: body.image_url || apps[index].image_url,
-      app_url: body.app_url || apps[index].app_url,
-      price: body.price !== undefined ? body.price : apps[index].price,
-    }
-
-    await saveApps(apps)
-    return NextResponse.json(apps[index])
+    return NextResponse.json(data[0])
   } catch (error) {
+    console.error('Error updating app:', error)
     return NextResponse.json({ error: 'Error updating app' }, { status: 500 })
   }
 }
@@ -115,25 +89,18 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id')
 
     if (!id) {
-      return NextResponse.json(
-        { error: 'Missing app id' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Missing app id' }, { status: 400 })
     }
 
-    const apps = await getApps()
-    const filtered = apps.filter(app => app.id !== id)
+    const { error } = await supabase
+      .from('apps')
+      .delete()
+      .eq('id', id)
 
-    if (filtered.length === apps.length) {
-      return NextResponse.json(
-        { error: 'App not found' },
-        { status: 404 }
-      )
-    }
-
-    await saveApps(filtered)
+    if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error) {
+    console.error('Error deleting app:', error)
     return NextResponse.json({ error: 'Error deleting app' }, { status: 500 })
   }
 }

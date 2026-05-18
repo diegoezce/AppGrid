@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import AppRating from '@/app/components/AppRating'
 import './marketplace.css'
 
 interface App {
@@ -12,6 +13,8 @@ interface App {
   image_url?: string
   app_url: string
   price: string
+  rating: number
+  rating_count: number
   created_at?: string
 }
 
@@ -118,6 +121,16 @@ export default function MarketplacePage() {
                   <div className="ag-app-content">
                     <h3>{app.title}</h3>
                     <p className="ag-app-description">{app.description}</p>
+                    <AppRating
+                      rating={app.rating || 0}
+                      count={app.rating_count || 0}
+                      appId={app.id}
+                      onRate={(newRating, newCount) => {
+                        setApps(prev => prev.map(a =>
+                          a.id === app.id ? { ...a, rating: newRating, rating_count: newCount } : a
+                        ))
+                      }}
+                    />
                     <div className="ag-app-footer">
                       <span className="ag-app-category">{app.category}</span>
                       <span className="ag-app-price">

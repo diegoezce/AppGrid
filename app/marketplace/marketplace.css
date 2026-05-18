@@ -138,6 +138,47 @@
   color: var(--ag-ink);
 }
 
+/* Rating */
+.ag-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.ag-rating-segments {
+  display: flex;
+  gap: 3px;
+}
+
+.ag-rating-seg {
+  width: 26px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--ag-line);
+  overflow: hidden;
+}
+
+.ag-rating-fill {
+  height: 100%;
+  background: var(--ag-accent);
+  transition: width 0.15s ease;
+}
+
+.ag-rating-interactive .ag-rating-seg {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.ag-rating-interactive .ag-rating-seg:hover {
+  transform: scaleY(1.2);
+}
+
+.ag-rating-label {
+  font-size: 0.75rem;
+  color: var(--ag-ink-3);
+  white-space: nowrap;
+}
+
 .ag-btn-full {
   margin: 0 1.5rem 1.5rem;
   width: calc(100% - 3rem);

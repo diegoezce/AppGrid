@@ -138,14 +138,19 @@ export default function MarketplacePage() {
                       </span>
                     </div>
                   </div>
-                  <a
-                    href={app.app_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ag-btn ag-btn-primary ag-btn-full"
-                  >
-                    Ir a la app →
-                  </a>
+                  <div className="ag-app-card-actions">
+                    <Link href={`/marketplace/${app.id}`} className="ag-btn ag-btn-ghost ag-btn-card">
+                      Ver detalle
+                    </Link>
+                    <a
+                      href={app.app_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ag-btn ag-btn-primary ag-btn-card"
+                    >
+                      Ir a la app →
+                    </a>
+                  </div>
                 </div>
               ))}
             </div>

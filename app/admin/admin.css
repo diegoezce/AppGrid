@@ -75,6 +75,44 @@
   border-bottom-color: var(--ag-accent);
 }
 
+.ag-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ag-accent);
+  color: var(--ag-ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  padding: 0 5px;
+  margin-left: 0.4rem;
+}
+
+.ag-status {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.ag-status-pending {
+  background: rgba(234, 179, 8, 0.1);
+  color: #a16207;
+}
+
+.ag-status-approved {
+  background: rgba(198, 242, 78, 0.2);
+  color: #3a5c00;
+}
+
+.ag-status-access_sent {
+  background: rgba(10, 10, 10, 0.06);
+  color: var(--ag-ink-3);
+}
+
 .ag-auth-form {
   max-width: 400px;
   margin: 4rem auto;

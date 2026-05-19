@@ -38,7 +38,10 @@ export async function POST(request: NextRequest) {
           category: body.category || 'general',
           image_url: body.image_url,
           app_url: body.app_url,
+          payment_url: body.payment_url || null,
           price: body.price || '0',
+          pricing_type: body.pricing_type || 'one_time',
+          currency: body.currency || 'USD',
           user_id: body.user_id || null,
         },
       ])
@@ -76,7 +79,10 @@ export async function PUT(request: NextRequest) {
         category: body.category,
         image_url: body.image_url,
         app_url: body.app_url,
+        payment_url: body.payment_url || null,
         price: body.price,
+        pricing_type: body.pricing_type || 'one_time',
+        currency: body.currency || 'USD',
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)

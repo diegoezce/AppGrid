@@ -24,7 +24,19 @@ const emptyForm = {
   category: 'general',
   image_url: '',
   app_url: '',
+  payment_url: '',
   price: '0',
+  pricing_type: 'one_time',
+  currency: 'USD',
+}
+
+interface Purchase {
+  id: string
+  app_id: string
+  buyer_email: string
+  status: 'pending' | 'approved' | 'access_sent'
+  created_at: string
+  apps: { title: string }
 }
 
 export default function AdminPage() {
@@ -35,7 +47,9 @@ export default function AdminPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [apps, setApps] = useState<App[]>([])
+  const [purchases, setPurchases] = useState<Purchase[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'form' | 'apps' | 'buyers'>('form')
   const [showForm, setShowForm] = useState(true)
 
   useEffect(() => {
@@ -57,20 +71,39 @@ export default function AdminPage() {
   }, [router])
 
   useEffect(() => {
-    if (user) fetchApps()
+    if (user) {
+      fetchApps()
+      fetchPurchases()
+    }
   }, [user])
 
   const fetchApps = async () => {
     if (!user) return
     try {
       const response = await fetch(`/api/apps?user_id=${user.id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setApps(data)
-      }
+      if (response.ok) setApps(await response.json())
     } catch (error) {
       console.error('Error fetching apps:', error)
     }
+  }
+
+  const fetchPurchases = async () => {
+    if (!user) return
+    try {
+      const response = await fetch(`/api/purchases?user_id=${user.id}`)
+      if (response.ok) setPurchases(await response.json())
+    } catch (error) {
+      console.error('Error fetching purchases:', error)
+    }
+  }
+
+  const updatePurchaseStatus = async (purchaseId: string, status: string) => {
+    await fetch(`/api/purchases/${purchaseId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    })
+    fetchPurchases()
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -111,17 +144,20 @@ export default function AdminPage() {
     }
   }
 
-  const handleEdit = (app: App) => {
+  const handleEdit = (app: App & { payment_url?: string; pricing_type?: string }) => {
     setFormData({
       title: app.title,
       description: app.description,
       category: app.category,
       image_url: app.image_url || '',
       app_url: app.app_url,
+      payment_url: app.payment_url || '',
       price: app.price,
+      pricing_type: app.pricing_type || 'one_time',
+      currency: (app as any).currency || 'USD',
     })
     setEditingId(app.id)
-    setShowForm(true)
+    setActiveTab('form')
   }
 
   const handleDelete = async (id: string) => {
@@ -143,7 +179,7 @@ export default function AdminPage() {
   const handleCancel = () => {
     setEditingId(null)
     setFormData(emptyForm)
-    setShowForm(false)
+    setActiveTab('apps')
   }
 
   const handleLogout = async () => {
@@ -174,20 +210,28 @@ export default function AdminPage() {
       <div className="ag-admin-content">
         <div className="ag-admin-tabs">
           <button
-            className={`ag-tab ${showForm ? 'active' : ''}`}
-            onClick={() => { setShowForm(true); handleCancel(); setShowForm(true) }}
+            className={`ag-tab ${activeTab === 'form' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('form'); setShowForm(true) }}
           >
             {editingId ? 'Editar app' : 'Nueva app'}
           </button>
           <button
-            className={`ag-tab ${!showForm ? 'active' : ''}`}
-            onClick={() => setShowForm(false)}
+            className={`ag-tab ${activeTab === 'apps' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('apps'); setShowForm(false) }}
           >
-            Ver todas ({apps.length})
+            Mis apps ({apps.length})
+          </button>
+          <button
+            className={`ag-tab ${activeTab === 'buyers' ? 'active' : ''}`}
+            onClick={() => setActiveTab('buyers')}
+          >
+            Compradores {purchases.filter(p => p.status === 'pending').length > 0 && (
+              <span className="ag-tab-badge">{purchases.filter(p => p.status === 'pending').length}</span>
+            )}
           </button>
         </div>
 
-        {showForm && (
+        {activeTab === 'form' && (
           <form onSubmit={handleSubmit} className="ag-admin-form">
             <div className="ag-form-group">
               <label htmlFor="title">Nombre de la app *</label>
@@ -222,13 +266,29 @@ export default function AdminPage() {
                 </select>
               </div>
               <div className="ag-form-group">
-                <label htmlFor="price">Precio (USD)</label>
-                <input
-                  id="price" type="number" name="price"
-                  placeholder="0 = Gratis"
-                  value={formData.price} onChange={handleChange}
-                  className="ag-input" min="0" step="0.01"
-                />
+                <label htmlFor="price">Precio</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <select id="currency" name="currency" value={(formData as any).currency} onChange={handleChange} className="ag-select" style={{ width: '90px', flexShrink: 0 }}>
+                    <option value="USD">USD</option>
+                    <option value="ARS">ARS</option>
+                    <option value="MXN">MXN</option>
+                  </select>
+                  <input
+                    id="price" type="number" name="price"
+                    placeholder="0 = Gratis"
+                    value={formData.price} onChange={handleChange}
+                    className="ag-input" min="0" step="0.01"
+                  />
+                </div>
+              </div>
+              <div className="ag-form-group">
+                <label htmlFor="pricing_type">Tipo de cobro</label>
+                <select id="pricing_type" name="pricing_type" value={formData.pricing_type} onChange={handleChange} className="ag-select">
+                  <option value="one_time">Pago único</option>
+                  <option value="weekly">Suscripción semanal</option>
+                  <option value="monthly">Suscripción mensual</option>
+                  <option value="yearly">Suscripción anual</option>
+                </select>
               </div>
             </div>
 
@@ -250,6 +310,19 @@ export default function AdminPage() {
                 value={formData.app_url} onChange={handleChange}
                 className="ag-input" required
               />
+            </div>
+
+            <div className="ag-form-group">
+              <label htmlFor="payment_url">Link de pago (MercadoPago u otro)</label>
+              <input
+                id="payment_url" type="url" name="payment_url"
+                placeholder="https://mpago.la/..."
+                value={formData.payment_url} onChange={handleChange}
+                className="ag-input"
+              />
+              <small style={{ color: 'var(--ag-ink-3)', fontSize: '0.8rem' }}>
+                Si no cargás un link, la app aparece como gratuita con acceso directo.
+              </small>
             </div>
 
             {message && (
@@ -281,12 +354,12 @@ export default function AdminPage() {
           </form>
         )}
 
-        {!showForm && (
+        {activeTab === 'apps' && (
           <div className="ag-apps-list">
             {apps.length === 0 ? (
               <div className="ag-empty-state">
                 <p>No hay apps publicadas todavía</p>
-                <button className="ag-btn ag-btn-primary" onClick={() => setShowForm(true)}>
+                <button className="ag-btn ag-btn-primary" onClick={() => setActiveTab('form')}>
                   Crear la primera app
                 </button>
               </div>
@@ -320,6 +393,62 @@ export default function AdminPage() {
             )}
           </div>
         )}
+        {activeTab === 'buyers' && (
+          <div className="ag-apps-list">
+            {purchases.length === 0 ? (
+              <div className="ag-empty-state">
+                <p>Todavía no hay compradores.</p>
+              </div>
+            ) : (
+              <table className="ag-table">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>App</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {purchases.map(p => (
+                    <tr key={p.id}>
+                      <td><strong>{p.buyer_email}</strong></td>
+                      <td>{p.apps?.title}</td>
+                      <td><small>{new Date(p.created_at).toLocaleDateString('es-AR')}</small></td>
+                      <td>
+                        <span className={`ag-status ag-status-${p.status}`}>
+                          {p.status === 'pending' && 'Pendiente'}
+                          {p.status === 'approved' && 'Aprobado'}
+                          {p.status === 'access_sent' && 'Acceso enviado'}
+                        </span>
+                      </td>
+                      <td className="ag-table-actions">
+                        {p.status === 'pending' && (
+                          <button
+                            className="ag-btn-sm ag-btn-edit"
+                            onClick={() => updatePurchaseStatus(p.id, 'approved')}
+                          >
+                            Aprobar
+                          </button>
+                        )}
+                        {p.status === 'approved' && (
+                          <button
+                            className="ag-btn-sm ag-btn-edit"
+                            onClick={() => updatePurchaseStatus(p.id, 'access_sent')}
+                          >
+                            Marcar acceso enviado
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
   )

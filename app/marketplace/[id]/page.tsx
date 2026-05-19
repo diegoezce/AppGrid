@@ -13,7 +13,10 @@ interface App {
   category: string
   image_url?: string
   app_url: string
+  payment_url?: string
   price: string
+  pricing_type: string
+  currency: string
   rating: number
   rating_count: number
   created_at: string
@@ -24,6 +27,10 @@ export default function AppDetailPage() {
   const router = useRouter()
   const [app, setApp] = useState<App | null>(null)
   const [loading, setLoading] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [email, setEmail] = useState('')
+  const [step, setStep] = useState<'form' | 'paying'>('form')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     fetch(`/api/apps/${id}`)
@@ -36,6 +43,26 @@ export default function AppDetailPage() {
       .finally(() => setLoading(false))
   }, [id, router])
 
+  const handleBuy = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!app) return
+    setSubmitting(true)
+    await fetch('/api/purchases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ app_id: app.id, buyer_email: email }),
+    })
+    setSubmitting(false)
+    setStep('paying')
+    window.open(app.payment_url, '_blank')
+  }
+
+  const closeModal = () => {
+    setModalOpen(false)
+    setStep('form')
+    setEmail('')
+  }
+
   if (loading) {
     return (
       <div className="ag-detail-loading">
@@ -47,6 +74,8 @@ export default function AppDetailPage() {
   if (!app) return null
 
   const isFree = app.price === '0' || app.price === '0.00' || !app.price
+  const currency = app.currency || 'USD'
+  const periodLabel = app.pricing_type === 'weekly' ? ' / sem' : app.pricing_type === 'monthly' ? ' / mes' : app.pricing_type === 'yearly' ? ' / año' : ''
 
   return (
     <main>
@@ -92,23 +121,35 @@ export default function AppDetailPage() {
 
           <div className="ag-detail-cta">
             <div className="ag-detail-price">
-              {isFree ? <span className="ag-price-free">Gratis</span> : <span className="ag-price-paid">${app.price} <small>USD</small></span>}
+              {isFree
+                ? <span className="ag-price-free">Gratis</span>
+                : <span className="ag-price-paid">
+                    ${app.price} <small>{currency}{periodLabel}</small>
+                  </span>
+              }
             </div>
-            <a
-              href={app.app_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ag-btn ag-btn-primary ag-btn-lg ag-detail-btn"
-            >
-              Ir a la app →
-            </a>
+            {isFree || !app.payment_url ? (
+              <a
+                href={app.app_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ag-btn ag-btn-primary ag-btn-lg ag-detail-btn"
+              >
+                Ir a la app →
+              </a>
+            ) : (
+              <button
+                className="ag-btn ag-btn-primary ag-btn-lg ag-detail-btn"
+                onClick={() => setModalOpen(true)}
+              >
+                Comprar acceso →
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Divider */}
         <hr className="ag-detail-divider" />
 
-        {/* Description */}
         <div className="ag-detail-body">
           <h2 className="ag-detail-section-title">Sobre esta app</h2>
           <p className="ag-detail-description">{app.description}</p>
@@ -121,6 +162,54 @@ export default function AppDetailPage() {
           <p>© 2026 AppGrid. Todos los derechos reservados.</p>
         </div>
       </footer>
+
+      {/* Modal de compra */}
+      {modalOpen && (
+        <div className="ag-modal-overlay" onClick={closeModal}>
+          <div className="ag-modal" onClick={e => e.stopPropagation()}>
+            <button className="ag-modal-close" onClick={closeModal}>✕</button>
+
+            {step === 'form' ? (
+              <>
+                <h2 className="ag-modal-title">Comprar {app.title}</h2>
+                <p className="ag-modal-sub">
+                  Dejá tu email y te redirigimos al pago. El dev te dará acceso una vez confirmado.
+                </p>
+                <form onSubmit={handleBuy} className="ag-modal-form">
+                  <input
+                    type="email"
+                    className="ag-input"
+                    placeholder="tu@email.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    className="ag-btn ag-btn-primary"
+                    style={{ width: '100%', justifyContent: 'center', padding: '0.875rem' }}
+                    disabled={submitting}
+                  >
+                    {submitting ? 'Un momento...' : `Ir al pago · $${app.price} ${currency}${periodLabel} →`}
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div className="ag-modal-success">
+                <div className="ag-modal-check">✓</div>
+                <h2 className="ag-modal-title">¡Pago iniciado!</h2>
+                <p className="ag-modal-sub">
+                  Completá el pago en la ventana que se abrió. Una vez confirmado, el dev te enviará el acceso a <strong>{email}</strong>.
+                </p>
+                <button className="ag-btn ag-btn-ghost" style={{ width: '100%', justifyContent: 'center' }} onClick={closeModal}>
+                  Cerrar
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   )
 }

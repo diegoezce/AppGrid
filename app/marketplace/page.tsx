@@ -13,9 +13,18 @@ interface App {
   image_url?: string
   app_url: string
   price: string
+  pricing_type: string
+  currency: string
   rating: number
   rating_count: number
   created_at?: string
+}
+
+function formatPrice(price: string, currency: string, pricingType: string) {
+  if (price === '0' || price === '0.00' || !price) return 'Gratis'
+  const symbols: Record<string, string> = { USD: 'USD', ARS: 'ARS', MXN: 'MXN' }
+  const suffix = pricingType === 'weekly' ? '/sem' : pricingType === 'monthly' ? '/mes' : pricingType === 'yearly' ? '/año' : ''
+  return `$${price} ${symbols[currency] || currency}${suffix}`
 }
 
 export default function MarketplacePage() {
@@ -134,7 +143,7 @@ export default function MarketplacePage() {
                     <div className="ag-app-footer">
                       <span className="ag-app-category">{app.category}</span>
                       <span className="ag-app-price">
-                        {app.price === '0' ? 'Gratis' : `$${app.price}`}
+                        {formatPrice(app.price, app.currency, app.pricing_type)}
                       </span>
                     </div>
                   </div>

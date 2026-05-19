@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
           price: body.price || '0',
           pricing_type: body.pricing_type || 'one_time',
           currency: body.currency || 'USD',
+          keywords: body.keywords || null,
           user_id: body.user_id || null,
         },
       ])
@@ -83,6 +84,7 @@ export async function PUT(request: NextRequest) {
         price: body.price,
         pricing_type: body.pricing_type || 'one_time',
         currency: body.currency || 'USD',
+        keywords: body.keywords || null,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)

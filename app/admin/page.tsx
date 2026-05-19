@@ -28,6 +28,7 @@ const emptyForm = {
   price: '0',
   pricing_type: 'one_time',
   currency: 'USD',
+  keywords: '',
 }
 
 interface Purchase {
@@ -155,6 +156,7 @@ export default function AdminPage() {
       price: app.price,
       pricing_type: app.pricing_type || 'one_time',
       currency: (app as any).currency || 'USD',
+      keywords: (app as any).keywords || '',
     })
     setEditingId(app.id)
     setActiveTab('form')
@@ -251,6 +253,19 @@ export default function AdminPage() {
                 value={formData.description} onChange={handleChange}
                 className="ag-textarea" required
               />
+            </div>
+
+            <div className="ag-form-group">
+              <label htmlFor="keywords">Keywords</label>
+              <input
+                id="keywords" type="text" name="keywords"
+                placeholder="ej: facturación, AFIP, pymes, automatización"
+                value={(formData as any).keywords} onChange={handleChange}
+                className="ag-input"
+              />
+              <small style={{ color: 'var(--ag-ink-3)', fontSize: '0.8rem' }}>
+                Separadas por coma. Ayudan a que te encuentren en el buscador.
+              </small>
             </div>
 
             <div className="ag-form-row">

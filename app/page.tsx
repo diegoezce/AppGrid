@@ -18,7 +18,7 @@ export default function Home() {
             <Link href="/marketplace">Marketplace</Link>
           </div>
           <div className="ag-nav-actions">
-            <Link href="/admin" className="ag-btn ag-btn-primary ag-btn-sm">
+            <Link href="/auth" className="ag-btn ag-btn-primary ag-btn-sm">
               Publicar app
             </Link>
           </div>
@@ -41,7 +41,7 @@ export default function Home() {
             empaquetar, posicionar y vender.
           </p>
           <div className="ag-hero-ctas">
-            <Link href="/admin" className="ag-btn ag-btn-primary ag-btn-lg">
+            <Link href="/auth" className="ag-btn ag-btn-primary ag-btn-lg">
               Publicá tu app →
             </Link>
             <Link href="/marketplace" className="ag-btn ag-btn-ghost ag-btn-lg">
@@ -128,7 +128,7 @@ export default function Home() {
         <div className="ag-container ag-cta-inner">
           <h2 className="ag-h2">¿Tenés una app lista?</h2>
           <p className="ag-lede">Publicala hoy. Es gratis y tarda menos de 5 minutos.</p>
-          <Link href="/admin" className="ag-btn ag-btn-primary ag-btn-lg">
+          <Link href="/auth" className="ag-btn ag-btn-primary ag-btn-lg">
             Empezar ahora →
           </Link>
         </div>
@@ -145,7 +145,7 @@ export default function Home() {
           </a>
           <div className="ag-footer-links">
             <Link href="/marketplace">Marketplace</Link>
-            <Link href="/admin">Admin</Link>
+            <Link href="/auth">Admin</Link>
           </div>
           <p className="ag-footer-copy">© 2026 AppGrid. Todos los derechos reservados.</p>
         </div>

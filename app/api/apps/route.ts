@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data, error } = await supabase
-      .from('apps')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('user_id')
 
+    let query = supabase.from('apps').select('*').order('created_at', { ascending: false })
+    if (userId) query = query.eq('user_id', userId)
+
+    const { data, error } = await query
     if (error) throw error
     return NextResponse.json(data || [])
   } catch (error) {
@@ -37,6 +39,7 @@ export async function POST(request: NextRequest) {
           image_url: body.image_url,
           app_url: body.app_url,
           price: body.price || '0',
+          user_id: body.user_id || null,
         },
       ])
       .select()
@@ -52,10 +55,17 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { id } = body
+    const { id, user_id } = body
 
     if (!id) {
       return NextResponse.json({ error: 'Missing app id' }, { status: 400 })
+    }
+
+    if (user_id) {
+      const { data: existing } = await supabase.from('apps').select('user_id').eq('id', id).single()
+      if (existing?.user_id && existing.user_id !== user_id) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
     }
 
     const { data, error } = await supabase
@@ -87,9 +97,17 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
+    const userId = searchParams.get('user_id')
 
     if (!id) {
       return NextResponse.json({ error: 'Missing app id' }, { status: 400 })
+    }
+
+    if (userId) {
+      const { data: existing } = await supabase.from('apps').select('user_id').eq('id', id).single()
+      if (existing?.user_id && existing.user_id !== userId) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
     }
 
     const { error } = await supabase

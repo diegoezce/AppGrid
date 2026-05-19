@@ -1,0 +1,126 @@
+.ag-auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ag-bg);
+  padding: 2rem;
+}
+
+.ag-auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border: 1px solid var(--ag-line);
+  border-radius: var(--ag-radius);
+  padding: 2.5rem;
+  box-shadow: var(--ag-shadow-md);
+}
+
+.ag-auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  text-decoration: none;
+  color: var(--ag-ink);
+}
+
+.ag-logo-mark {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 3px;
+  background: var(--ag-accent);
+  flex-shrink: 0;
+}
+
+.ag-logo-mark span {
+  background: var(--ag-ink);
+  border-radius: 1px;
+}
+
+.ag-logo-word {
+  letter-spacing: -0.03em;
+}
+
+.ag-auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--ag-line);
+  margin-bottom: 1.75rem;
+  gap: 0;
+}
+
+.ag-auth-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ag-ink-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s ease;
+}
+
+.ag-auth-tab.active {
+  color: var(--ag-ink);
+  border-bottom-color: var(--ag-accent);
+}
+
+.ag-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ag-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ag-form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ag-ink-2);
+}
+
+.ag-auth-message {
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--ag-radius-sm);
+  margin: 0;
+}
+
+.ag-auth-message.success {
+  background: rgba(198, 242, 78, 0.15);
+  color: #3a5c00;
+  border: 1px solid rgba(198, 242, 78, 0.4);
+}
+
+.ag-auth-message.error {
+  background: rgba(220, 38, 38, 0.06);
+  color: #b91c1c;
+  border: 1px solid rgba(220, 38, 38, 0.15);
+}
+
+.ag-auth-submit {
+  width: 100%;
+  justify-content: center;
+  padding: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.ag-auth-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

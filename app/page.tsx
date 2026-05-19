@@ -89,8 +89,8 @@ export default function Home() {
             <div className="ag-step-arrow">→</div>
             <div className="ag-step">
               <div className="ag-step-num">03</div>
-              <h3 className="ag-h3">Cobrás</h3>
-              <p>Procesamos el pago y te transferimos. Vos enfocate en el producto, nosotros en el resto.</p>
+              <h3 className="ag-h3">Cobrás directo</h3>
+              <p>El comprador paga por tu link de MercadoPago. Vos recibís el dinero y le dás acceso. Sin intermediarios.</p>
             </div>
           </div>
         </div>

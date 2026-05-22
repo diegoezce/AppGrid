@@ -1,7 +1,14 @@
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 import './page.css'
 
-export default function Home() {
+export default async function Home() {
+  const { count } = await supabase
+    .from('apps')
+    .select('*', { count: 'exact', head: true })
+
+  const appCount = count ?? 0
+
   return (
     <main>
       {/* Nav */}
@@ -50,7 +57,7 @@ export default function Home() {
           </div>
           <div className="ag-hero-stats">
             <div className="ag-stat">
-              <strong>5</strong>
+              <strong>{appCount}</strong>
               <span>apps publicadas</span>
             </div>
             <div className="ag-stat-sep" />

@@ -130,6 +130,39 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Próximamente */}
+      <section className="ag-section">
+        <div className="ag-container">
+          <div className="ag-section-header">
+            <h2 className="ag-h2">Lo que viene</h2>
+            <p className="ag-section-sub">AppGrid está creciendo. Esto es lo que estamos construyendo.</p>
+          </div>
+          <div className="ag-roadmap">
+            <div className="ag-roadmap-item">
+              <span className="ag-roadmap-dot" />
+              <div>
+                <strong>Distribución con IA</strong>
+                <p>Herramientas para que tu app llegue exactamente a la audiencia que la necesita.</p>
+              </div>
+            </div>
+            <div className="ag-roadmap-item">
+              <span className="ag-roadmap-dot" />
+              <div>
+                <strong>Analytics de tu app</strong>
+                <p>Cuántas visitas, de dónde vienen, qué convierte. Todo en un dashboard.</p>
+              </div>
+            </div>
+            <div className="ag-roadmap-item">
+              <span className="ag-roadmap-dot" />
+              <div>
+                <strong>Pagos integrados</strong>
+                <p>Procesá cobros directamente desde AppGrid, sin salir de la plataforma.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA final */}
       <section className="ag-section ag-cta-section">
         <div className="ag-container ag-cta-inner">

@@ -15,7 +15,28 @@ interface App {
   image_url?: string
   app_url: string
   price: string
+  pricing_type?: string
+  currency?: string
   created_at?: string
+}
+
+function formatPrice(price: string, currency?: string) {
+  if (price === '0' || price === '0.00' || !price) return 'Gratis'
+
+  const localeMap: { [key: string]: string } = {
+    USD: 'en-US',
+    ARS: 'es-AR',
+    MXN: 'es-MX',
+  }
+  const locale = localeMap[currency || 'USD'] || 'en-US'
+
+  const numPrice = parseFloat(price)
+  const formatted = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numPrice)
+
+  return `$${formatted}`
 }
 
 const emptyForm = {
@@ -396,7 +417,7 @@ export default function AdminPage() {
                         <small>{app.description.substring(0, 50)}...</small>
                       </td>
                       <td>{app.category}</td>
-                      <td>{app.price === '0' ? 'Gratis' : `$${app.price}`}</td>
+                      <td>{formatPrice(app.price, app.currency)}</td>
                       <td className="ag-table-actions">
                         <button className="ag-btn-sm ag-btn-edit" onClick={() => handleEdit(app)}>Editar</button>
                         <button className="ag-btn-sm ag-btn-delete" onClick={() => handleDelete(app.id)}>Eliminar</button>

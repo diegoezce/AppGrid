@@ -23,8 +23,22 @@ interface App {
 
 function formatPrice(price: string, currency: string, pricingType: string) {
   if (price === '0' || price === '0.00' || !price) return 'Gratis'
+
+  const localeMap: { [key: string]: string } = {
+    USD: 'en-US',
+    ARS: 'es-AR',
+    MXN: 'es-MX',
+  }
+  const locale = localeMap[currency] || 'en-US'
+
+  const numPrice = parseFloat(price)
+  const formatted = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numPrice)
+
   const suffix = pricingType === 'weekly' ? '/sem' : pricingType === 'monthly' ? '/mes' : pricingType === 'yearly' ? '/año' : ''
-  return `$${price} ${currency}${suffix}`
+  return `$${formatted}${suffix}`
 }
 
 export default function MarketplacePage() {

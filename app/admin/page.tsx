@@ -20,6 +20,21 @@ interface App {
   created_at?: string
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  general: 'General',
+  productivity: 'Productividad',
+  health: 'Salud',
+  education: 'Educación',
+  finance: 'Finanzas',
+  sports: 'Deportes',
+  community: 'Comunidad',
+  other: 'Otro',
+}
+
+function categoryLabel(cat: string) {
+  return CATEGORY_LABELS[cat] ?? cat.charAt(0).toUpperCase() + cat.slice(1)
+}
+
 function formatPrice(price: string, currency?: string) {
   if (price === '0' || price === '0.00' || !price) return 'Gratis'
 
@@ -418,7 +433,7 @@ export default function AdminPage() {
                         <strong>{app.title}</strong><br />
                         <small>{app.description.substring(0, 50)}...</small>
                       </td>
-                      <td>{app.category}</td>
+                      <td>{categoryLabel(app.category)}</td>
                       <td>{formatPrice(app.price, app.currency)}</td>
                       <td className="ag-table-actions">
                         <button className="ag-btn-sm ag-btn-edit" onClick={() => handleEdit(app)}>Editar</button>

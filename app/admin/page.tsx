@@ -298,6 +298,8 @@ export default function AdminPage() {
                   <option value="health">Salud</option>
                   <option value="education">Educación</option>
                   <option value="finance">Finanzas</option>
+                  <option value="sports">Deportes</option>
+                  <option value="community">Comunidad</option>
                   <option value="other">Otro</option>
                 </select>
               </div>

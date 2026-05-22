@@ -21,6 +21,21 @@ interface App {
   created_at?: string
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  general: 'General',
+  productivity: 'Productividad',
+  health: 'Salud',
+  education: 'Educación',
+  finance: 'Finanzas',
+  sports: 'Deportes',
+  community: 'Comunidad',
+  other: 'Otro',
+}
+
+function categoryLabel(cat: string) {
+  return CATEGORY_LABELS[cat] ?? cat.charAt(0).toUpperCase() + cat.slice(1)
+}
+
 function formatPrice(price: string, currency: string, pricingType: string) {
   if (price === '0' || price === '0.00' || !price) return 'Gratis'
 
@@ -161,7 +176,7 @@ export default function MarketplacePage() {
                 className={`ag-filter-btn ${selectedCategory === cat ? 'active' : ''}`}
                 onClick={() => setSelectedCategory(cat)}
               >
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {categoryLabel(cat)}
               </button>
             ))}
           </div>
@@ -205,7 +220,7 @@ export default function MarketplacePage() {
                       onRate={(r, c) => updateRating(app.id, r, c)}
                     />
                     <div className="ag-app-footer">
-                      <span className="ag-app-category">{app.category}</span>
+                      <span className="ag-app-category">{categoryLabel(app.category)}</span>
                       <span className="ag-app-price">{formatPrice(app.price, app.currency, app.pricing_type)}</span>
                     </div>
                   </div>

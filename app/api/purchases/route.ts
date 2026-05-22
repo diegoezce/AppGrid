@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
+import { sendPurchaseNotification } from '@/lib/mailjet'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -32,16 +34,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('purchases')
       .insert([{ app_id, buyer_email }])
       .select()
       .single()
 
     if (error) throw error
+
+    // Notificar al dev por email
+    try {
+      const { data: app } = await supabase
+        .from('apps')
+        .select('title, user_id')
+        .eq('id', app_id)
+        .single()
+
+      if (app?.user_id) {
+        const { data: userData } = await supabaseAdmin.auth.admin.getUserById(app.user_id)
+        if (userData?.user?.email) {
+          await sendPurchaseNotification({
+            devEmail: userData.user.email,
+            buyerEmail: buyer_email,
+            appTitle: app.title,
+          })
+        }
+      }
+    } catch (emailError) {
+      console.error('Error sending notification email:', emailError)
+    }
+
     return NextResponse.json(data, { status: 201 })
   } catch (error) {
     console.error('Error creating purchase:', error)
-    return NextResponse.json({ error: 'Error creating purchase' }, { status: 500 })
+    const message = error instanceof Error ? error.message : JSON.stringify(error)
+    return NextResponse.json({ error: 'Error creating purchase', detail: message }, { status: 500 })
   }
 }

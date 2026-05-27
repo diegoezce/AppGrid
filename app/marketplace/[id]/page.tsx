@@ -6,10 +6,24 @@ import Link from 'next/link'
 import AppRating from '@/app/components/AppRating'
 import './app-detail.css'
 
-const parseHTML = (html: string) => {
-  const fragment = document.createElement('div')
-  fragment.innerHTML = html
-  return fragment.innerHTML
+const parseMarkdown = (text: string): string => {
+  if (!text) return ''
+
+  return text
+    .split('\n\n')
+    .map(paragraph => {
+      let content = paragraph
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+
+      if (content.includes('<li>')) {
+        content = `<ul>${content}</ul>`
+      }
+
+      return `<p>${content}</p>`
+    })
+    .join('')
 }
 
 interface App {
@@ -174,7 +188,7 @@ export default function AppDetailPage() {
           <h2 className="ag-detail-section-title">Sobre esta app</h2>
           <div
             className="ag-detail-description"
-            dangerouslySetInnerHTML={{ __html: app.description }}
+            dangerouslySetInnerHTML={{ __html: parseMarkdown(app.description) }}
           />
         </div>
 

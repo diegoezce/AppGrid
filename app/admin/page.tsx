@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
+import dynamic from 'next/dynamic'
+import 'react-quill/dist/quill.snow.css'
 import './admin.css'
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 interface App {
   id: string
@@ -148,6 +152,10 @@ export default function AdminPage() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleDescriptionChange = (value: string) => {
+    setFormData(prev => ({ ...prev, description: value }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -283,11 +291,19 @@ export default function AdminPage() {
 
             <div className="ag-form-group">
               <label htmlFor="description">Descripción *</label>
-              <textarea
-                id="description" name="description"
+              <ReactQuill
+                value={formData.description}
+                onChange={handleDescriptionChange}
+                theme="snow"
                 placeholder="Describe brevemente qué hace tu app..."
-                value={formData.description} onChange={handleChange}
-                className="ag-textarea" required
+                modules={{
+                  toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    [{ 'header': 1 }, { 'header': 2 }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link']
+                  ]
+                }}
               />
             </div>
 

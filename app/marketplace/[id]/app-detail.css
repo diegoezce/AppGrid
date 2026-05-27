@@ -139,7 +139,14 @@
   font-size: 1.125rem;
   line-height: 1.75;
   color: var(--ag-ink-2);
-  white-space: pre-wrap;
+}
+
+.ag-detail-description > * {
+  margin-bottom: 1rem;
+}
+
+.ag-detail-description > *:last-child {
+  margin-bottom: 0;
 }
 
 /* Nav reuse */
@@ -290,9 +297,19 @@
 
   .ag-detail-cta {
     grid-column: 1 / -1;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .ag-detail-cta > div {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .ag-detail-cta > div > a,
+  .ag-detail-cta > div > button {
+    min-width: unset !important;
   }
 
   .ag-detail-logo {

@@ -6,6 +6,12 @@ import Link from 'next/link'
 import AppRating from '@/app/components/AppRating'
 import './app-detail.css'
 
+const parseHTML = (html: string) => {
+  const fragment = document.createElement('div')
+  fragment.innerHTML = html
+  return fragment.innerHTML
+}
+
 interface App {
   id: string
   title: string
@@ -128,7 +134,7 @@ export default function AppDetailPage() {
                   </span>
               }
             </div>
-            {isFree || !app.payment_url ? (
+            {isFree ? (
               <a
                 href={app.app_url}
                 target="_blank"
@@ -138,12 +144,26 @@ export default function AppDetailPage() {
                 Ir a la app →
               </a>
             ) : (
-              <button
-                className="ag-btn ag-btn-primary ag-btn-lg ag-detail-btn"
-                onClick={() => setModalOpen(true)}
-              >
-                Comprar acceso →
-              </button>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <a
+                  href={app.app_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ag-btn ag-btn-ghost ag-btn-lg ag-detail-btn"
+                  style={{ flex: 1, minWidth: '150px' }}
+                >
+                  Probar la app
+                </a>
+                {app.payment_url && (
+                  <button
+                    className="ag-btn ag-btn-primary ag-btn-lg ag-detail-btn"
+                    onClick={() => setModalOpen(true)}
+                    style={{ flex: 1, minWidth: '150px' }}
+                  >
+                    Comprar acceso →
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -152,7 +172,10 @@ export default function AppDetailPage() {
 
         <div className="ag-detail-body">
           <h2 className="ag-detail-section-title">Sobre esta app</h2>
-          <p className="ag-detail-description">{app.description}</p>
+          <div
+            className="ag-detail-description"
+            dangerouslySetInnerHTML={{ __html: app.description }}
+          />
         </div>
 
       </div>

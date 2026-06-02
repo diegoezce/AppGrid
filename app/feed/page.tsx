@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import UpdateFeedItem from '@/app/components/UpdateFeedItem'
+import Navigation from '@/app/components/Navigation'
 import { supabase } from '@/lib/supabase'
 import './feed.css'
 
@@ -53,22 +54,30 @@ export default function FeedPage() {
 
   if (isLoading) {
     return (
-      <div className="ag-feed-container">
-        <div className="ag-loading">Loading feed...</div>
-      </div>
+      <>
+        <Navigation />
+        <div className="ag-feed-container">
+          <div className="ag-loading">Loading feed...</div>
+        </div>
+      </>
     )
   }
 
   if (hasError) {
     return (
-      <div className="ag-feed-container">
-        <div className="ag-error">Failed to load feed. Please try again.</div>
-      </div>
+      <>
+        <Navigation />
+        <div className="ag-feed-container">
+          <div className="ag-error">Failed to load feed. Please try again.</div>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="ag-feed-container">
+    <>
+      <Navigation />
+      <div className="ag-feed-container">
       <div className="ag-feed-header">
         <h1>Feed</h1>
         <p>Updates from builders you follow</p>
@@ -92,5 +101,6 @@ export default function FeedPage() {
         </div>
       )}
     </div>
+    </>
   )
 }

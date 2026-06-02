@@ -6,6 +6,7 @@ import Link from 'next/link'
 import FollowButton from '@/app/components/FollowButton'
 import BuilderStats from '@/app/components/BuilderStats'
 import UpdateFeedItem from '@/app/components/UpdateFeedItem'
+import Navigation from '@/app/components/Navigation'
 import { supabase } from '@/lib/supabase'
 import './builder-profile.css'
 
@@ -86,101 +87,110 @@ export default function BuilderProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="ag-builder-profile-container">
-        <div className="ag-loading">Loading profile...</div>
-      </div>
+      <>
+        <Navigation />
+        <div className="ag-builder-profile-container">
+          <div className="ag-loading">Loading profile...</div>
+        </div>
+      </>
     )
   }
 
   if (hasError || !builder) {
     return (
-      <div className="ag-builder-profile-container">
-        <div className="ag-error">Builder not found</div>
-        <Link href="/builders" className="ag-back-link">← Back to Builders</Link>
-      </div>
+      <>
+        <Navigation />
+        <div className="ag-builder-profile-container">
+          <div className="ag-error">Builder not found</div>
+          <Link href="/builders" className="ag-back-link">← Back to Builders</Link>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="ag-builder-profile-container">
-      <Link href="/builders" className="ag-back-link">← Builders</Link>
+    <>
+      <Navigation />
+      <div className="ag-builder-profile-container">
+        <Link href="/builders" className="ag-back-link">← Builders</Link>
 
-      <div className="ag-builder-profile-header">
-        {builder.avatar_url && (
-          <img src={builder.avatar_url} alt={builder.display_name} className="ag-builder-profile-avatar" />
-        )}
-        <div className="ag-builder-profile-info">
-          <h1>{builder.display_name || builder.username}</h1>
-          <p className="ag-builder-profile-username">@{builder.username}</p>
-          {builder.bio && <p className="ag-builder-profile-bio">{builder.bio}</p>}
+        <div className="ag-builder-profile-header">
+          {builder.avatar_url && (
+            <img src={builder.avatar_url} alt={builder.display_name} className="ag-builder-profile-avatar" />
+          )}
+          <div className="ag-builder-profile-info">
+            <h1>{builder.display_name || builder.username}</h1>
+            <p className="ag-builder-profile-username">@{builder.username}</p>
+            {builder.bio && <p className="ag-builder-profile-bio">{builder.bio}</p>}
+          </div>
+
+          {!builder.is_own_profile && currentUserId && (
+            <div className="ag-builder-profile-action">
+              <FollowButton
+                userId={builder.id}
+                currentUserId={currentUserId}
+                isFollowing={builder.is_following}
+              />
+            </div>
+          )}
         </div>
 
-        {!builder.is_own_profile && currentUserId && (
-          <div className="ag-builder-profile-action">
-            <FollowButton
-              userId={builder.id}
-              currentUserId={currentUserId}
-              isFollowing={builder.is_following}
-            />
+        <BuilderStats
+          apps_count={builder.apps_count}
+          followers_count={builder.followers_count}
+          following_count={builder.following_count}
+        />
+
+        <div className="ag-builder-profile-tabs">
+          <button
+            className={activeTab === 'apps' ? 'active' : ''}
+            onClick={() => setActiveTab('apps')}
+          >
+            Apps ({apps.length})
+          </button>
+          <button
+            className={activeTab === 'updates' ? 'active' : ''}
+            onClick={() => setActiveTab('updates')}
+          >
+            Updates ({updates.length})
+          </button>
+        </div>
+
+        {activeTab === 'apps' && (
+          <div className="ag-builder-apps">
+            {apps.length === 0 ? (
+              <p className="ag-empty-message">No apps yet</p>
+            ) : (
+              <div className="ag-apps-grid">
+                {apps.map(app => (
+                  <Link key={app.id} href={`/marketplace/${app.id}`} className="ag-app-card">
+                    {app.image_url && <img src={app.image_url} alt={app.title} />}
+                    <h3>{app.title}</h3>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'updates' && (
+          <div className="ag-builder-updates">
+            {updates.length === 0 ? (
+              <p className="ag-empty-message">No updates yet</p>
+            ) : (
+              <div className="ag-updates-list">
+                {updates.map(update => (
+                  <UpdateFeedItem
+                    key={update.id}
+                    {...update}
+                    currentUserId={currentUserId || undefined}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
-
-      <BuilderStats
-        apps_count={builder.apps_count}
-        followers_count={builder.followers_count}
-        following_count={builder.following_count}
-      />
-
-      <div className="ag-builder-profile-tabs">
-        <button
-          className={activeTab === 'apps' ? 'active' : ''}
-          onClick={() => setActiveTab('apps')}
-        >
-          Apps ({apps.length})
-        </button>
-        <button
-          className={activeTab === 'updates' ? 'active' : ''}
-          onClick={() => setActiveTab('updates')}
-        >
-          Updates ({updates.length})
-        </button>
-      </div>
-
-      {activeTab === 'apps' && (
-        <div className="ag-builder-apps">
-          {apps.length === 0 ? (
-            <p className="ag-empty-message">No apps yet</p>
-          ) : (
-            <div className="ag-apps-grid">
-              {apps.map(app => (
-                <Link key={app.id} href={`/marketplace/${app.id}`} className="ag-app-card">
-                  {app.image_url && <img src={app.image_url} alt={app.title} />}
-                  <h3>{app.title}</h3>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'updates' && (
-        <div className="ag-builder-updates">
-          {updates.length === 0 ? (
-            <p className="ag-empty-message">No updates yet</p>
-          ) : (
-            <div className="ag-updates-list">
-              {updates.map(update => (
-                <UpdateFeedItem
-                  key={update.id}
-                  {...update}
-                  currentUserId={currentUserId || undefined}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    </>
   )
 }

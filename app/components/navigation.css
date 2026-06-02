@@ -117,3 +117,24 @@
     font-size: 0.7rem;
   }
 }
+
+.ag-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ag-nav-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--ag-primary, #6366f1);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}

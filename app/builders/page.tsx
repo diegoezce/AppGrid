@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import BuilderCard from '@/app/components/BuilderCard'
+import Navigation from '@/app/components/Navigation'
 import { supabase } from '@/lib/supabase'
 import './builders.css'
 
@@ -56,58 +57,67 @@ export default function BuildersPage() {
 
   if (isLoading) {
     return (
-      <div className="ag-builders-container">
-        <div className="ag-loading">Loading builders...</div>
-      </div>
+      <>
+        <Navigation />
+        <div className="ag-builders-container">
+          <div className="ag-loading">Loading builders...</div>
+        </div>
+      </>
     )
   }
 
   if (hasError) {
     return (
-      <div className="ag-builders-container">
-        <div className="ag-error">Failed to load builders. Please try again.</div>
-      </div>
+      <>
+        <Navigation />
+        <div className="ag-builders-container">
+          <div className="ag-error">Failed to load builders. Please try again.</div>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="ag-builders-container">
-      <div className="ag-builders-header">
-        <h1>Explore Builders</h1>
-        <p>Discover what other builders are creating</p>
+    <>
+      <Navigation />
+      <div className="ag-builders-container">
+        <div className="ag-builders-header">
+          <h1>Explore Builders</h1>
+          <p>Discover what other builders are creating</p>
 
-        <div className="ag-builders-sort">
-          <button
-            className={sortBy === 'followers' ? 'active' : ''}
-            onClick={() => setSortBy('followers')}
-          >
-            Most Followers
-          </button>
-          <button
-            className={sortBy === 'apps' ? 'active' : ''}
-            onClick={() => setSortBy('apps')}
-          >
-            Most Apps
-          </button>
+          <div className="ag-builders-sort">
+            <button
+              className={sortBy === 'followers' ? 'active' : ''}
+              onClick={() => setSortBy('followers')}
+            >
+              Most Followers
+            </button>
+            <button
+              className={sortBy === 'apps' ? 'active' : ''}
+              onClick={() => setSortBy('apps')}
+            >
+              Most Apps
+            </button>
+          </div>
         </div>
+
+        {builders.length === 0 ? (
+          <div className="ag-empty-state">
+            <p>No builders found</p>
+          </div>
+        ) : (
+          <div className="ag-builders-grid">
+            {builders.map(builder => (
+              <BuilderCard
+                key={builder.id}
+                {...builder}
+                isFollowing={followingSet.has(builder.id)}
+                currentUserId={currentUserId || undefined}
+              />
+            ))}
+          </div>
+        )}
       </div>
-
-      {builders.length === 0 ? (
-        <div className="ag-empty-state">
-          <p>No builders found</p>
-        </div>
-      ) : (
-        <div className="ag-builders-grid">
-          {builders.map(builder => (
-            <BuilderCard
-              key={builder.id}
-              {...builder}
-              isFollowing={followingSet.has(builder.id)}
-              currentUserId={currentUserId || undefined}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   )
 }

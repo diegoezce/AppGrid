@@ -165,6 +165,7 @@ export default function ClientHome({ appCount }: ClientHomeProps) {
             <span className="ag-logo-word">AppGrid</span>
           </a>
           <div className="ag-footer-links">
+            <Link href="/builders">{t('nav.builders') || 'Builders'}</Link>
             <Link href="/marketplace">{t('nav.marketplace')}</Link>
             <Link href="/auth">{t('nav.admin')}</Link>
           </div>

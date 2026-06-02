@@ -52,12 +52,13 @@ export default function Navigation() {
           {!isLoading && isAuthenticated ? (
             <>
               <Link href="/feed">{t('nav.feed') || 'Feed'}</Link>
-              <Link href="/builders">{t('nav.explore') || 'Explore'}</Link>
+              <Link href="/builders">{t('nav.builders') || 'Builders'}</Link>
               <Link href="/marketplace">{t('nav.marketplace')}</Link>
             </>
           ) : !isLoading ? (
             <>
-              <Link href="#como">{t('nav.howWorks')}</Link>
+              <Link href="/#como">{t('nav.howWorks')}</Link>
+              <Link href="/builders">{t('nav.builders') || 'Builders'}</Link>
               <Link href="/marketplace">{t('nav.marketplace')}</Link>
             </>
           ) : null}
@@ -69,9 +70,10 @@ export default function Navigation() {
             <>
               <Link
                 href={username ? `/builders/${username}` : '/profile'}
-                className="ag-btn ag-btn-ghost ag-btn-sm"
+                className="ag-btn ag-btn-ghost ag-btn-sm ag-nav-user"
               >
-                {t('nav.profile') || 'Profile'}
+                <span className="ag-nav-avatar">{username ? username[0].toUpperCase() : '?'}</span>
+                {username ? `@${username}` : (t('nav.profile') || 'Profile')}
               </Link>
               <Link href="/admin" className="ag-btn ag-btn-primary ag-btn-sm">
                 {t('nav.admin') || 'Admin'}

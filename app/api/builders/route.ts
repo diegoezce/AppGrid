@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('users')
       .select('*')
+      .not('username', 'is', null)
+      .neq('username', '')
       .range(offset, offset + limit - 1)
 
     if (sort === 'followers') {

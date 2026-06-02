@@ -5,6 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const user_id = searchParams.get('user_id')
+    const since = searchParams.get('since')
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
     const authorIds = [...new Set([user_id, ...(follows || []).map(f => f.following_id)])]
 
     // Get updates from followed builders + own updates with app and author info
-    const { data: updates, error: updatesError } = await supabase
+    let updatesQuery = supabase
       .from('application_updates')
       .select(`
         *,
@@ -34,6 +35,10 @@ export async function GET(request: NextRequest) {
       .in('author_id', authorIds)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
+
+    if (since) updatesQuery = updatesQuery.gt('created_at', since)
+
+    const { data: updates, error: updatesError } = await updatesQuery
 
     if (updatesError) throw updatesError
 

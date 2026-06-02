@@ -52,6 +52,10 @@ export default function FeedPage() {
         }
         setCurrentUserId(session.user.id)
 
+        // Mark feed as seen and notify nav to clear badge
+        localStorage.setItem('ag_feed_last_seen', new Date().toISOString())
+        window.dispatchEvent(new Event('feed-visited'))
+
         const { data: profile } = await supabase
           .from('users')
           .select('username')

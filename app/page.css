@@ -75,7 +75,7 @@
 
 /* Hero */
 .ag-hero {
-  padding: 7rem 0 6rem;
+  padding: 4rem 0 3.5rem;
   border-bottom: 1px solid var(--ag-line);
   text-align: center;
 }
@@ -95,7 +95,7 @@
   font-size: 0.875rem;
   color: var(--ag-ink-3);
   font-weight: 500;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
   background: white;
   border: 1px solid var(--ag-line);
   padding: 0.35rem 1rem;
@@ -113,7 +113,7 @@
 .ag-hero-ctas {
   display: flex;
   gap: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -153,7 +153,7 @@
 
 /* Sections */
 .ag-section {
-  padding: 6rem 0;
+  padding: 3.5rem 0;
   border-bottom: 1px solid var(--ag-line);
 }
 
@@ -163,13 +163,13 @@
 
 .ag-section-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
 }
 
 .ag-section-sub {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: var(--ag-ink-2);
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 /* Steps */
@@ -222,8 +222,21 @@
 }
 
 .ag-feature-icon {
-  font-size: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
   margin-bottom: 1rem;
+  color: var(--ag-ink);
+  background: var(--ag-accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.ag-feature-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .ag-feature-card h3 {
@@ -356,7 +369,7 @@
   }
 
   .ag-hero {
-    padding: 4rem 0;
+    padding: 2.5rem 0;
   }
 
   .ag-hero-ctas {
@@ -383,7 +396,7 @@
   }
 
   .ag-section {
-    padding: 4rem 0;
+    padding: 2.5rem 0;
   }
 
   .ag-footer-inner {

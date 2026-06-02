@@ -14,6 +14,7 @@ export default function Navigation() {
   const [username, setUsername] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [feedBadge, setFeedBadge] = useState(0)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -30,6 +31,16 @@ export default function Navigation() {
             .maybeSingle()
 
           if (data?.username) setUsername(data.username)
+
+          // Check for new feed updates since last visit
+          const lastSeen = localStorage.getItem('ag_feed_last_seen')
+          if (lastSeen) {
+            const res = await fetch(`/api/feed?user_id=${session.user.id}&since=${encodeURIComponent(lastSeen)}&limit=50`)
+            if (res.ok) {
+              const data = await res.json()
+              setFeedBadge(Array.isArray(data) ? data.length : 0)
+            }
+          }
         }
       } catch (error) {
         console.error('Check auth error:', error)
@@ -39,6 +50,10 @@ export default function Navigation() {
     }
 
     checkAuth()
+
+    const clearBadge = () => setFeedBadge(0)
+    window.addEventListener('feed-visited', clearBadge)
+    return () => window.removeEventListener('feed-visited', clearBadge)
   }, [])
 
   return (
@@ -55,7 +70,12 @@ export default function Navigation() {
         <div className="ag-nav-links">
           {!isLoading && isAuthenticated ? (
             <>
-              <Link href="/feed">{t('nav.feed') || 'Feed'}</Link>
+              <Link href="/feed" className="ag-nav-feed-link">
+                {t('nav.feed') || 'Feed'}
+                {feedBadge > 0 && (
+                  <span className="ag-nav-badge">{feedBadge > 9 ? '9+' : feedBadge}</span>
+                )}
+              </Link>
               <Link href="/builders">{t('nav.builders') || 'Builders'}</Link>
               <Link href="/marketplace">{t('nav.marketplace')}</Link>
             </>

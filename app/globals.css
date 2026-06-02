@@ -59,11 +59,11 @@ a {
 
 /* Tipografía */
 .ag-h1 {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .ag-h1-accent {
@@ -75,7 +75,7 @@ a {
 }
 
 .ag-h2 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -87,10 +87,10 @@ a {
 }
 
 .ag-lede {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   color: var(--ag-ink-2);
-  line-height: 1.65;
-  margin-bottom: 2rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
 }
 
 .ag-mono {

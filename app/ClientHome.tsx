@@ -96,17 +96,31 @@ export default function ClientHome({ appCount }: ClientHomeProps) {
           </div>
           <div className="ag-grid ag-grid-3">
             <div className="ag-feature-card">
-              <div className="ag-feature-icon">⚡</div>
+              <div className="ag-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
               <h3 className="ag-h3">{t('features.feature1')}</h3>
               <p>{t('features.feature1Desc')}</p>
             </div>
             <div className="ag-feature-card">
-              <div className="ag-feature-icon">🌎</div>
+              <div className="ag-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </div>
               <h3 className="ag-h3">{t('features.feature2')}</h3>
               <p>{t('features.feature2Desc')}</p>
             </div>
             <div className="ag-feature-card">
-              <div className="ag-feature-icon">💰</div>
+              <div className="ag-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
               <h3 className="ag-h3">{t('features.feature3')}</h3>
               <p>{t('features.feature3Desc')}</p>
             </div>

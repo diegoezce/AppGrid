@@ -360,8 +360,9 @@
 @media (max-width: 768px) {
   .ag-nav-inner {
     height: auto;
-    padding: 1rem 0;
+    padding: 1rem;
     flex-wrap: wrap;
+    gap: 1rem;
   }
 
   .ag-nav-links {
@@ -369,12 +370,13 @@
   }
 
   .ag-hero {
-    padding: 2.5rem 0;
+    padding: 2rem 0;
   }
 
   .ag-hero-ctas {
     flex-direction: column;
     width: 100%;
+    gap: 0.75rem;
   }
 
   .ag-hero-ctas .ag-btn {
@@ -382,8 +384,19 @@
     justify-content: center;
   }
 
+  .ag-btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
   .ag-hero-stats {
+    flex-direction: column;
     gap: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .ag-stat-sep {
+    display: none;
   }
 
   .ag-steps {
@@ -391,12 +404,24 @@
     gap: 2rem;
   }
 
+  .ag-step-num {
+    font-size: 1.5rem;
+  }
+
   .ag-step-arrow {
     display: none;
   }
 
   .ag-section {
-    padding: 2.5rem 0;
+    padding: 2rem 0;
+  }
+
+  .ag-section-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .ag-feature-card {
+    padding: 1.5rem;
   }
 
   .ag-footer-inner {
@@ -407,5 +432,54 @@
 
   .ag-footer-copy {
     margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .ag-nav-inner {
+    padding: 0.75rem;
+  }
+
+  .ag-logo-word {
+    display: none;
+  }
+
+  .ag-hero {
+    padding: 1.5rem 0;
+  }
+
+  .ag-hero-ctas {
+    gap: 0.5rem;
+  }
+
+  .ag-btn-lg {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .ag-hero-stats {
+    gap: 0.75rem;
+  }
+
+  .ag-section {
+    padding: 1.5rem 0;
+  }
+
+  .ag-eyebrow {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .ag-feature-card {
+    padding: 1rem;
+  }
+
+  .ag-feature-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .ag-roadmap-item {
+    padding: 1rem 0;
   }
 }

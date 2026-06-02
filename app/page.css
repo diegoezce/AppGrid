@@ -366,6 +366,15 @@
     gap: 1rem;
   }
 
+  .ag-nav-links {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .ag-nav-actions {
+    order: 2;
+  }
+
   .ag-hero {
     padding: 2rem 0;
   }

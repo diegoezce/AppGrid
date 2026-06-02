@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import LanguageToggle from './LanguageToggle'
+import CreateUpdateFAB from './CreateUpdateFAB'
 import { useLanguage } from '@/app/i18n/useLanguage'
 import './navigation.css'
 
@@ -11,6 +12,7 @@ export default function Navigation() {
   const { t } = useLanguage()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [username, setUsername] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export default function Navigation() {
 
         if (session?.user) {
           setIsAuthenticated(true)
+          setUserId(session.user.id)
           const { data } = await supabase
             .from('users')
             .select('username')
@@ -39,6 +42,7 @@ export default function Navigation() {
   }, [])
 
   return (
+    <>
     <nav className="ag-nav">
       <div className="ag-container ag-nav-inner">
         <a href="/" className="ag-logo">
@@ -87,5 +91,9 @@ export default function Navigation() {
         </div>
       </div>
     </nav>
+    {!isLoading && isAuthenticated && userId && (
+      <CreateUpdateFAB userId={userId} />
+    )}
+    </>
   )
 }

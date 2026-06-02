@@ -187,6 +187,52 @@
     "hoursAgo": "h ago",
     "daysAgo": "d ago"
   },
+  "landing": {
+    "feedLive": "Live",
+    "feedTitle": "What builders are shipping",
+    "feedSubtitle": "Real updates from developers across LATAM and Spain",
+    "feedCta": "See full feed"
+  },
+  "composer": {
+    "placeholder": "What are you working on?",
+    "titlePlaceholder": "Update title",
+    "contentPlaceholder": "Tell the community what you shipped, improved, or what's coming...",
+    "post": "Post",
+    "posting": "Posting...",
+    "cancel": "Cancel",
+    "error": "Failed to post. Please try again."
+  },
+  "editProfile": {
+    "action": "Edit profile",
+    "title": "My profile",
+    "displayName": "Name",
+    "displayNamePlaceholder": "Your full name",
+    "username": "Username",
+    "usernamePlaceholder": "your_username",
+    "bio": "Bio",
+    "bioPlaceholder": "Briefly describe what you do...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "saved": "Profile updated",
+    "error": "Failed to save. Please try again."
+  },
+  "createUpdate": {
+    "new": "Quick actions",
+    "newUpdate": "New update",
+    "newApp": "New app",
+    "title": "Post an update",
+    "appLabel": "App",
+    "updateTitle": "Title",
+    "titlePlaceholder": "e.g: v1.2 — new export feature",
+    "contentLabel": "What's new",
+    "contentPlaceholder": "Tell followers what changed, improved, or is coming...",
+    "publish": "Publish",
+    "publishing": "Publishing...",
+    "cancel": "Cancel",
+    "error": "Failed to publish. Please try again.",
+    "noApps": "Publish an app first from the Admin panel."
+  },
   "admin": {
     "title": "Admin Panel",
     "loading": "Loading...",

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useLanguage } from '@/app/i18n/useLanguage'
 import Navigation from '@/app/components/Navigation'
+import FeedPreview from '@/app/components/FeedPreview'
 
 interface ClientHomeProps {
   appCount: number
@@ -54,6 +55,8 @@ export default function ClientHome({ appCount }: ClientHomeProps) {
           </div>
         </div>
       </section>
+
+      <FeedPreview />
 
       {/* Cómo funciona */}
       <section id="como" className="ag-section">

@@ -187,6 +187,52 @@
     "hoursAgo": "h",
     "daysAgo": "d"
   },
+  "landing": {
+    "feedLive": "En vivo",
+    "feedTitle": "Lo que están construyendo",
+    "feedSubtitle": "Actualizaciones reales de builders de LATAM y España",
+    "feedCta": "Ver todo el feed"
+  },
+  "composer": {
+    "placeholder": "¿En qué estás trabajando?",
+    "titlePlaceholder": "Título del update",
+    "contentPlaceholder": "Contale a la comunidad qué cambiaste, qué lanzaste o qué viene...",
+    "post": "Publicar",
+    "posting": "Publicando...",
+    "cancel": "Cancelar",
+    "error": "Error al publicar. Intentá de nuevo."
+  },
+  "editProfile": {
+    "action": "Editar perfil",
+    "title": "Mi perfil",
+    "displayName": "Nombre",
+    "displayNamePlaceholder": "Tu nombre completo",
+    "username": "Username",
+    "usernamePlaceholder": "tu_username",
+    "bio": "Bio",
+    "bioPlaceholder": "Contá brevemente qué hacés...",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "saved": "Perfil actualizado",
+    "error": "Error al guardar. Intentá de nuevo."
+  },
+  "createUpdate": {
+    "new": "Acciones rápidas",
+    "newUpdate": "Nueva actualización",
+    "newApp": "Nueva app",
+    "title": "Publicar actualización",
+    "appLabel": "App",
+    "updateTitle": "Título",
+    "titlePlaceholder": "ej: v1.2 — nueva función de exportación",
+    "contentLabel": "Qué hay de nuevo",
+    "contentPlaceholder": "Contá qué cambiaste, qué mejoró o qué viene...",
+    "publish": "Publicar",
+    "publishing": "Publicando...",
+    "cancel": "Cancelar",
+    "error": "Error al publicar. Intentá de nuevo.",
+    "noApps": "Primero publicá una app desde el panel de Admin."
+  },
   "admin": {
     "title": "Panel de Admin",
     "loading": "Cargando...",

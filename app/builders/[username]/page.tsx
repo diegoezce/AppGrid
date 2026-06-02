@@ -193,6 +193,6 @@ export default function BuilderProfilePage() {
           </div>
         )}
       </div>
-    </>
+</>
   )
 }

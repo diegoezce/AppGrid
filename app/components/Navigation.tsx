@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import LanguageToggle from './LanguageToggle'
 import { useLanguage } from '@/app/i18n/useLanguage'
 
@@ -15,21 +15,17 @@ export default function Navigation() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { session } } = await supabase.auth.getSession()
 
-        if (user) {
+        if (session?.user) {
           setIsAuthenticated(true)
-          // Get user's profile
           const { data } = await supabase
             .from('users')
             .select('username')
-            .eq('id', user.id)
-            .single()
+            .eq('id', session.user.id)
+            .maybeSingle()
 
-          if (data?.username) {
-            setUsername(data.username)
-          }
+          if (data?.username) setUsername(data.username)
         }
       } catch (error) {
         console.error('Check auth error:', error)
@@ -52,25 +48,28 @@ export default function Navigation() {
         </a>
 
         <div className="ag-nav-links">
-          {isAuthenticated && !isLoading && (
+          {!isLoading && isAuthenticated ? (
             <>
               <Link href="/feed">{t('nav.feed') || 'Feed'}</Link>
               <Link href="/builders">{t('nav.explore') || 'Explore'}</Link>
+              <Link href="/marketplace">{t('nav.marketplace')}</Link>
             </>
-          )}
-          {!isAuthenticated && !isLoading && (
+          ) : !isLoading ? (
             <>
               <Link href="#como">{t('nav.howWorks')}</Link>
               <Link href="/marketplace">{t('nav.marketplace')}</Link>
             </>
-          )}
+          ) : null}
         </div>
 
         <div className="ag-nav-actions">
           <LanguageToggle />
-          {isAuthenticated && !isLoading ? (
+          {!isLoading && isAuthenticated ? (
             <>
-              <Link href={username ? `/builders/${username}` : '/profile'} className="ag-btn ag-btn-secondary ag-btn-sm">
+              <Link
+                href={username ? `/builders/${username}` : '/profile'}
+                className="ag-btn ag-btn-ghost ag-btn-sm"
+              >
                 {t('nav.profile') || 'Profile'}
               </Link>
               <Link href="/admin" className="ag-btn ag-btn-primary ag-btn-sm">

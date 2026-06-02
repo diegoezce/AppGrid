@@ -11,24 +11,13 @@ interface UpdateFeedItemProps {
   likes_count: number
   created_at: string
   liked_by_user?: boolean
-  app: {
-    id: string
-    title: string
-    image_url?: string
-  }
-  author: {
-    id: string
-    display_name: string
-    username: string
-    avatar_url?: string
-  }
+  app: { id: string; title: string; image_url?: string }
+  author: { id: string; display_name: string; username: string; avatar_url?: string }
   currentUserId?: string
 }
 
 function formatTime(timestamp: string): string {
-  const now = new Date()
-  const then = new Date(timestamp)
-  const diffMs = now.getTime() - then.getTime()
+  const diffMs = Date.now() - new Date(timestamp).getTime()
   const diffMins = Math.floor(diffMs / 60000)
   const diffHours = Math.floor(diffMins / 60)
   const diffDays = Math.floor(diffHours / 24)
@@ -37,8 +26,7 @@ function formatTime(timestamp: string): string {
   if (diffMins < 60) return `${diffMins}m ago`
   if (diffHours < 24) return `${diffHours}h ago`
   if (diffDays < 7) return `${diffDays}d ago`
-
-  return then.toLocaleDateString()
+  return new Date(timestamp).toLocaleDateString()
 }
 
 export default function UpdateFeedItem({
@@ -66,7 +54,7 @@ export default function UpdateFeedItem({
     setIsLoading(true)
     try {
       if (isLiked) {
-        const response = await fetch(`/api/updates/${id}/like`, {
+        const response = await fetch(`/api/updates/${id}/like?user_id=${currentUserId}`, {
           method: 'DELETE'
         })
         if (!response.ok) throw new Error('Failed to unlike')
@@ -74,13 +62,14 @@ export default function UpdateFeedItem({
         setLikesCount(Math.max(0, likesCount - 1))
       } else {
         const response = await fetch(`/api/updates/${id}/like`, {
-          method: 'POST'
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: currentUserId })
         })
         if (!response.ok) throw new Error('Failed to like')
         setIsLiked(true)
         setLikesCount(likesCount + 1)
       }
-      router.refresh()
     } catch (error) {
       console.error('Toggle like error:', error)
     } finally {
@@ -93,11 +82,7 @@ export default function UpdateFeedItem({
       <div className="ag-feed-item-header">
         <Link href={`/builders/${author.username}`} className="ag-author-info">
           {author.avatar_url && (
-            <img
-              src={author.avatar_url}
-              alt={author.display_name}
-              className="ag-feed-avatar"
-            />
+            <img src={author.avatar_url} alt={author.display_name} className="ag-feed-avatar" />
           )}
           <div className="ag-author-details">
             <p className="ag-author-name">{author.display_name}</p>

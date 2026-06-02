@@ -6,7 +6,7 @@ import Link from 'next/link'
 import FollowButton from '@/app/components/FollowButton'
 import BuilderStats from '@/app/components/BuilderStats'
 import UpdateFeedItem from '@/app/components/UpdateFeedItem'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import './builder-profile.css'
 
 interface Builder {
@@ -51,31 +51,28 @@ export default function BuilderProfilePage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!username) return
+
     const fetchBuilder = async () => {
       try {
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
-        setCurrentUserId(user?.id || null)
+        const { data: { session } } = await supabase.auth.getSession()
+        const userId = session?.user?.id || null
+        setCurrentUserId(userId)
 
-        // Get builder
-        const builderRes = await fetch(`/api/builders/${username}`)
+        const builderRes = await fetch(
+          `/api/builders/${username}${userId ? `?current_user_id=${userId}` : ''}`
+        )
         if (!builderRes.ok) throw new Error('Builder not found')
         const builderData = await builderRes.json()
         setBuilder(builderData)
 
-        // Get builder's apps
-        const appsRes = await fetch(`/api/apps?user_id=${builderData.id}`)
-        if (appsRes.ok) {
-          const appsData = await appsRes.json()
-          setApps(appsData)
-        }
+        const [appsRes, updatesRes] = await Promise.all([
+          fetch(`/api/apps?user_id=${builderData.id}`),
+          fetch(`/api/updates?user_id=${builderData.id}`)
+        ])
 
-        // Get builder's updates
-        const updatesRes = await fetch(`/api/updates?user_id=${builderData.id}`)
-        if (updatesRes.ok) {
-          const updatesData = await updatesRes.json()
-          setUpdates(updatesData)
-        }
+        if (appsRes.ok) setApps(await appsRes.json())
+        if (updatesRes.ok) setUpdates(await updatesRes.json())
       } catch (error) {
         console.error('Fetch builder error:', error)
         setHasError(true)
@@ -84,9 +81,7 @@ export default function BuilderProfilePage() {
       }
     }
 
-    if (username) {
-      fetchBuilder()
-    }
+    fetchBuilder()
   }, [username])
 
   if (isLoading) {
@@ -101,26 +96,18 @@ export default function BuilderProfilePage() {
     return (
       <div className="ag-builder-profile-container">
         <div className="ag-error">Builder not found</div>
-        <Link href="/builders" className="ag-back-link">
-          ← Back to Builders
-        </Link>
+        <Link href="/builders" className="ag-back-link">← Back to Builders</Link>
       </div>
     )
   }
 
   return (
     <div className="ag-builder-profile-container">
-      <Link href="/builders" className="ag-back-link">
-        ← Builders
-      </Link>
+      <Link href="/builders" className="ag-back-link">← Builders</Link>
 
       <div className="ag-builder-profile-header">
         {builder.avatar_url && (
-          <img
-            src={builder.avatar_url}
-            alt={builder.display_name}
-            className="ag-builder-profile-avatar"
-          />
+          <img src={builder.avatar_url} alt={builder.display_name} className="ag-builder-profile-avatar" />
         )}
         <div className="ag-builder-profile-info">
           <h1>{builder.display_name || builder.username}</h1>
@@ -132,6 +119,7 @@ export default function BuilderProfilePage() {
           <div className="ag-builder-profile-action">
             <FollowButton
               userId={builder.id}
+              currentUserId={currentUserId}
               isFollowing={builder.is_following}
             />
           </div>
@@ -166,14 +154,8 @@ export default function BuilderProfilePage() {
           ) : (
             <div className="ag-apps-grid">
               {apps.map(app => (
-                <Link
-                  key={app.id}
-                  href={`/marketplace/${app.id}`}
-                  className="ag-app-card"
-                >
-                  {app.image_url && (
-                    <img src={app.image_url} alt={app.title} />
-                  )}
+                <Link key={app.id} href={`/marketplace/${app.id}`} className="ag-app-card">
+                  {app.image_url && <img src={app.image_url} alt={app.title} />}
                   <h3>{app.title}</h3>
                 </Link>
               ))}

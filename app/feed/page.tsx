@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import UpdateFeedItem from '@/app/components/UpdateFeedItem'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import './feed.css'
 
 interface Update {
@@ -12,17 +12,8 @@ interface Update {
   content: string
   likes_count: number
   created_at: string
-  app: {
-    id: string
-    title: string
-    image_url?: string
-  }
-  author: {
-    id: string
-    display_name: string
-    username: string
-    avatar_url?: string
-  }
+  app: { id: string; title: string; image_url?: string }
+  author: { id: string; display_name: string; username: string; avatar_url?: string }
   liked_by_user: boolean
 }
 
@@ -36,21 +27,19 @@ export default function FeedPage() {
   useEffect(() => {
     const fetchFeed = async () => {
       try {
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { session } } = await supabase.auth.getSession()
 
-        if (!user) {
+        if (!session?.user) {
           router.push('/auth')
           return
         }
 
-        setCurrentUserId(user.id)
+        setCurrentUserId(session.user.id)
 
-        const response = await fetch('/api/feed?limit=20')
+        const response = await fetch(`/api/feed?user_id=${session.user.id}&limit=20`)
         if (!response.ok) throw new Error('Failed to fetch feed')
 
-        const data = await response.json()
-        setUpdates(data)
+        setUpdates(await response.json())
       } catch (error) {
         console.error('Fetch feed error:', error)
         setHasError(true)
@@ -78,20 +67,6 @@ export default function FeedPage() {
     )
   }
 
-  if (updates.length === 0) {
-    return (
-      <div className="ag-feed-container">
-        <div className="ag-empty-state">
-          <h2>No updates yet</h2>
-          <p>Follow builders to see their latest updates</p>
-          <a href="/builders" className="ag-button-primary">
-            Explore Builders
-          </a>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="ag-feed-container">
       <div className="ag-feed-header">
@@ -99,15 +74,23 @@ export default function FeedPage() {
         <p>Updates from builders you follow</p>
       </div>
 
-      <div className="ag-feed-list">
-        {updates.map(update => (
-          <UpdateFeedItem
-            key={update.id}
-            {...update}
-            currentUserId={currentUserId || undefined}
-          />
-        ))}
-      </div>
+      {updates.length === 0 ? (
+        <div className="ag-empty-state">
+          <h2>No updates yet</h2>
+          <p>Follow builders to see their latest updates</p>
+          <a href="/builders" className="ag-button-primary">Explore Builders</a>
+        </div>
+      ) : (
+        <div className="ag-feed-list">
+          {updates.map(update => (
+            <UpdateFeedItem
+              key={update.id}
+              {...update}
+              currentUserId={currentUserId || undefined}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

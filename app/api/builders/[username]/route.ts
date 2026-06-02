@@ -1,57 +1,50 @@
-import { createClient } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { username } = await params
+    const { searchParams } = new URL(request.url)
+    const current_user_id = searchParams.get('current_user_id')
 
     const { data: builder, error } = await supabase
       .from('users')
       .select('*')
-      .eq('username', params.username)
+      .eq('username', username)
       .single()
 
     if (error || !builder) {
-      return NextResponse.json(
-        { error: 'Builder not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Builder not found' }, { status: 404 })
     }
 
-    // Get app count
     const { count: appsCount } = await supabase
       .from('apps')
-      .select('*', { count: 'exact' })
+      .select('*', { count: 'exact', head: true })
       .eq('user_id', builder.id)
 
-    // Check if current user follows this builder
     let isFollowing = false
-    if (user) {
-      const { data: follows } = await supabase
+    if (current_user_id) {
+      const { data: follow } = await supabase
         .from('follows')
-        .select('*')
-        .eq('follower_id', user.id)
+        .select('id')
+        .eq('follower_id', current_user_id)
         .eq('following_id', builder.id)
-        .single()
+        .maybeSingle()
 
-      isFollowing = !!follows
+      isFollowing = !!follow
     }
 
     return NextResponse.json({
       ...builder,
-      apps_count: appsCount || 0,
+      apps_count: appsCount ?? 0,
       is_following: isFollowing,
-      is_own_profile: user?.id === builder.id
+      is_own_profile: current_user_id === builder.id,
     })
   } catch (error) {
     console.error('Get builder error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch builder' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch builder' }, { status: 500 })
   }
 }

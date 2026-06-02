@@ -5,12 +5,14 @@ import { useRouter } from 'next/navigation'
 
 interface FollowButtonProps {
   userId: string
+  currentUserId: string
   isFollowing: boolean
   onFollowChange?: (isFollowing: boolean) => void
 }
 
 export default function FollowButton({
   userId,
+  currentUserId,
   isFollowing: initialIsFollowing,
   onFollowChange
 }: FollowButtonProps) {
@@ -22,15 +24,16 @@ export default function FollowButton({
     setIsLoading(true)
     try {
       if (isFollowing) {
-        const response = await fetch(`/api/follows?following_id=${userId}`, {
-          method: 'DELETE'
-        })
+        const response = await fetch(
+          `/api/follows?follower_id=${currentUserId}&following_id=${userId}`,
+          { method: 'DELETE' }
+        )
         if (!response.ok) throw new Error('Failed to unfollow')
       } else {
         const response = await fetch('/api/follows', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ following_id: userId })
+          body: JSON.stringify({ follower_id: currentUserId, following_id: userId })
         })
         if (!response.ok) throw new Error('Failed to follow')
       }
@@ -41,7 +44,6 @@ export default function FollowButton({
       router.refresh()
     } catch (error) {
       console.error('Toggle follow error:', error)
-      alert(isFollowing ? 'Failed to unfollow' : 'Failed to follow')
     } finally {
       setIsLoading(false)
     }

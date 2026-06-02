@@ -174,7 +174,7 @@ export default function AdminPage() {
       const response = await fetch('/api/updates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updateForm),
+        body: JSON.stringify({ ...updateForm, author_id: user?.id }),
       })
 
       if (response.ok) {
@@ -196,7 +196,7 @@ export default function AdminPage() {
   const handleDeleteUpdate = async (id: string) => {
     if (!confirm('Delete this update?')) return
     try {
-      const response = await fetch(`/api/updates?id=${id}`, { method: 'DELETE' })
+      const response = await fetch(`/api/updates?id=${id}&author_id=${user?.id}`, { method: 'DELETE' })
       if (response.ok) {
         fetchUpdates()
       }

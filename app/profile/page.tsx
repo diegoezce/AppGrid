@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import './profile.css'
 
 interface UserProfile {
@@ -22,6 +22,7 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
+  const [message, setMessage] = useState('')
   const [formData, setFormData] = useState({
     display_name: '',
     username: '',
@@ -32,10 +33,9 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const supabase = createClient()
-        const { data: { user }, error: authError } = await supabase.auth.getUser()
+        const { data: { session } } = await supabase.auth.getSession()
 
-        if (authError || !user) {
+        if (!session?.user) {
           router.push('/auth')
           return
         }
@@ -43,28 +43,20 @@ export default function ProfilePage() {
         const { data, error } = await supabase
           .from('users')
           .select('*')
-          .eq('id', user.id)
-          .single()
+          .eq('id', session.user.id)
+          .maybeSingle()
 
-        if (error) {
-          // Create user if not exists
-          const { data: newUser } = await supabase
+        if (!data || error) {
+          // Create profile row if it doesn't exist
+          const { data: created } = await supabase
             .from('users')
-            .insert({
-              id: user.id,
-              email: user.email
-            })
+            .insert({ id: session.user.id, email: session.user.email })
             .select()
             .single()
 
-          if (newUser) {
-            setProfile(newUser)
-            setFormData({
-              display_name: newUser.display_name || '',
-              username: newUser.username || '',
-              bio: newUser.bio || '',
-              avatar_url: newUser.avatar_url || ''
-            })
+          if (created) {
+            setProfile(created)
+            setFormData({ display_name: '', username: '', bio: '', avatar_url: '' })
           }
         } else {
           setProfile(data)
@@ -85,9 +77,7 @@ export default function ProfilePage() {
     fetchProfile()
   }, [router])
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
@@ -95,117 +85,93 @@ export default function ProfilePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSaving(true)
+    setMessage('')
 
     try {
       const response = await fetch('/api/builders', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ user_id: profile?.id, ...formData })
       })
 
-      if (!response.ok) throw new Error('Failed to update profile')
+      if (!response.ok) {
+        const data = await response.json()
+        setMessage(data.error || 'Failed to update profile')
+        return
+      }
 
       const updated = await response.json()
       setProfile(updated)
-      alert('Profile updated successfully!')
-      router.refresh()
-    } catch (error) {
-      console.error('Update profile error:', error)
-      alert('Failed to update profile')
+      setMessage('Profile updated!')
+      setTimeout(() => setMessage(''), 3000)
+    } catch {
+      setMessage('Connection error')
     } finally {
       setIsSaving(false)
     }
   }
 
   if (isLoading) {
-    return (
-      <div className="ag-profile-container">
-        <div className="ag-loading">Loading profile...</div>
-      </div>
-    )
+    return <div className="ag-profile-container"><div className="ag-loading">Loading profile...</div></div>
   }
 
   if (!profile) {
-    return (
-      <div className="ag-profile-container">
-        <div className="ag-error">Failed to load profile</div>
-      </div>
-    )
+    return <div className="ag-profile-container"><div className="ag-error">Failed to load profile</div></div>
   }
 
   return (
     <div className="ag-profile-container">
       <div className="ag-profile-header">
         <h1>My Profile</h1>
-        <Link href={profile.username ? `/builders/${profile.username}` : '#'} className="ag-view-profile-link">
-          View Public Profile →
-        </Link>
+        {profile.username && (
+          <Link href={`/builders/${profile.username}`} className="ag-view-profile-link">
+            View Public Profile →
+          </Link>
+        )}
       </div>
 
       <div className="ag-profile-card">
         <form onSubmit={handleSubmit} className="ag-profile-form">
           <div className="ag-form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={profile.email}
-              disabled
-              className="ag-input-disabled"
-            />
-            <small>Email cannot be changed</small>
+            <label>Email</label>
+            <input type="email" value={profile.email} disabled className="ag-input-disabled" />
           </div>
 
           <div className="ag-form-group">
             <label htmlFor="display_name">Display Name</label>
             <input
-              type="text"
-              id="display_name"
-              name="display_name"
-              value={formData.display_name}
-              onChange={handleChange}
-              placeholder="Your full name"
-              className="ag-input"
+              id="display_name" type="text" name="display_name"
+              value={formData.display_name} onChange={handleChange}
+              placeholder="Your full name" className="ag-input"
             />
           </div>
 
           <div className="ag-form-group">
             <label htmlFor="username">Username</label>
             <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="your_username"
-              className="ag-input"
+              id="username" type="text" name="username"
+              value={formData.username} onChange={handleChange}
+              placeholder="your_username" className="ag-input"
             />
-            <small>URL-friendly username for your profile</small>
+            <small>Used in your public profile URL: /builders/your_username</small>
           </div>
 
           <div className="ag-form-group">
             <label htmlFor="bio">Bio</label>
             <textarea
-              id="bio"
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
+              id="bio" name="bio"
+              value={formData.bio} onChange={handleChange}
               placeholder="Tell builders about yourself"
-              rows={4}
-              className="ag-textarea"
+              rows={4} className="ag-textarea"
             />
           </div>
 
           <div className="ag-form-group">
             <label htmlFor="avatar_url">Avatar URL</label>
             <input
-              type="url"
-              id="avatar_url"
-              name="avatar_url"
-              value={formData.avatar_url}
-              onChange={handleChange}
-              placeholder="https://example.com/avatar.jpg"
-              className="ag-input"
+              id="avatar_url" type="url" name="avatar_url"
+              value={formData.avatar_url} onChange={handleChange}
+              placeholder="https://example.com/avatar.jpg" className="ag-input"
             />
             {formData.avatar_url && (
               <div className="ag-avatar-preview">
@@ -214,11 +180,13 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="ag-button-submit"
-          >
+          {message && (
+            <p className={message === 'Profile updated!' ? 'ag-message-success' : 'ag-message-error'}>
+              {message}
+            </p>
+          )}
+
+          <button type="submit" disabled={isSaving} className="ag-button-submit">
             {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
         </form>

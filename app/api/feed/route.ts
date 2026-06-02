@@ -1,39 +1,32 @@
-import { createClient } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
     const { searchParams } = new URL(request.url)
+    const user_id = searchParams.get('user_id')
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Get users that current user follows
+    if (!user_id) {
+      return NextResponse.json({ error: 'user_id is required' }, { status: 400 })
+    }
+
+    // Get IDs of builders this user follows
     const { data: follows, error: followsError } = await supabase
       .from('follows')
       .select('following_id')
-      .eq('follower_id', user.id)
+      .eq('follower_id', user_id)
 
     if (followsError) throw followsError
 
-    const followedIds = follows.map(f => f.following_id)
-
-    // If user doesn't follow anyone, return empty feed
-    if (followedIds.length === 0) {
+    if (!follows || follows.length === 0) {
       return NextResponse.json([])
     }
 
-    // Get updates from followed builders, with app and author info
+    const followedIds = follows.map(f => f.following_id)
+
+    // Get updates from followed builders with app and author info
     const { data: updates, error: updatesError } = await supabase
       .from('application_updates')
       .select(`
@@ -47,34 +40,30 @@ export async function GET(request: NextRequest) {
 
     if (updatesError) throw updatesError
 
-    // Check if current user liked each update
-    const updateIds = updates.map(u => u.id)
-    let userLikes = new Map()
+    // Check which updates the current user has liked
+    const updateIds = (updates || []).map(u => u.id)
+    let likedSet = new Set<string>()
 
     if (updateIds.length > 0) {
-      const { data: likes, error: likesError } = await supabase
+      const { data: likes } = await supabase
         .from('update_likes')
         .select('update_id')
-        .eq('user_id', user.id)
+        .eq('user_id', user_id)
         .in('update_id', updateIds)
 
-      if (likesError) throw likesError
-
-      userLikes = new Map(likes.map(l => [l.update_id, true]))
+      if (likes) {
+        likedSet = new Set(likes.map(l => l.update_id))
+      }
     }
 
-    // Add liked flag to each update
-    const enrichedUpdates = updates.map(update => ({
+    const enriched = (updates || []).map(update => ({
       ...update,
-      liked_by_user: userLikes.has(update.id)
+      liked_by_user: likedSet.has(update.id)
     }))
 
-    return NextResponse.json(enrichedUpdates)
+    return NextResponse.json(enriched)
   } catch (error) {
     console.error('Feed error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch feed' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch feed' }, { status: 500 })
   }
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import BuilderCard from '@/app/components/BuilderCard'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import './builders.css'
 
 interface Builder {
@@ -25,25 +25,23 @@ export default function BuildersPage() {
   const [sortBy, setSortBy] = useState<'followers' | 'apps'>('followers')
 
   useEffect(() => {
-    const fetchBuilders = async () => {
+    const fetchData = async () => {
       try {
-        const supabase = createClient()
-        const { data: { user } } = await supabase.auth.getUser()
-        setCurrentUserId(user?.id || null)
+        const { data: { session } } = await supabase.auth.getSession()
+        const userId = session?.user?.id || null
+        setCurrentUserId(userId)
 
-        const response = await fetch(`/api/builders?sort=${sortBy}&limit=50`)
-        if (!response.ok) throw new Error('Failed to fetch builders')
+        const [buildersRes, followsRes] = await Promise.all([
+          fetch(`/api/builders?sort=${sortBy}&limit=50`),
+          userId ? fetch(`/api/follows?user_id=${userId}&type=following`) : Promise.resolve(null)
+        ])
 
-        const data = await response.json()
-        setBuilders(data)
+        if (!buildersRes.ok) throw new Error('Failed to fetch builders')
+        setBuilders(await buildersRes.json())
 
-        // Get current user's following list
-        if (user) {
-          const followRes = await fetch(`/api/follows?user_id=${user.id}&type=following`)
-          if (followRes.ok) {
-            const follows = await followRes.json()
-            setFollowingSet(new Set(follows.map(f => f.following_id)))
-          }
+        if (followsRes?.ok) {
+          const follows = await followsRes.json()
+          setFollowingSet(new Set(follows.map((f: any) => f.following_id)))
         }
       } catch (error) {
         console.error('Fetch builders error:', error)
@@ -53,7 +51,7 @@ export default function BuildersPage() {
       }
     }
 
-    fetchBuilders()
+    fetchData()
   }, [sortBy])
 
   if (isLoading) {
@@ -94,20 +92,20 @@ export default function BuildersPage() {
         </div>
       </div>
 
-      <div className="ag-builders-grid">
-        {builders.map(builder => (
-          <BuilderCard
-            key={builder.id}
-            {...builder}
-            isFollowing={followingSet.has(builder.id)}
-            currentUserId={currentUserId || undefined}
-          />
-        ))}
-      </div>
-
-      {builders.length === 0 && (
+      {builders.length === 0 ? (
         <div className="ag-empty-state">
           <p>No builders found</p>
+        </div>
+      ) : (
+        <div className="ag-builders-grid">
+          {builders.map(builder => (
+            <BuilderCard
+              key={builder.id}
+              {...builder}
+              isFollowing={followingSet.has(builder.id)}
+              currentUserId={currentUserId || undefined}
+            />
+          ))}
         </div>
       )}
     </div>

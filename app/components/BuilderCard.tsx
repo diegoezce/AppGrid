@@ -58,7 +58,7 @@ export default function BuilderCard({
       </div>
 
       {currentUserId && currentUserId !== id && (
-        <FollowButton userId={id} isFollowing={isFollowing} />
+        <FollowButton userId={id} currentUserId={currentUserId} isFollowing={isFollowing} />
       )}
     </div>
   )

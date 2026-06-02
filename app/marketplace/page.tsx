@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/app/i18n/useLanguage'
-import LanguageToggle from '@/app/components/LanguageToggle'
+import Navigation from '@/app/components/Navigation'
 import AppRating from '@/app/components/AppRating'
 import './marketplace.css'
 
@@ -89,22 +89,7 @@ export default function MarketplacePage() {
 
   return (
     <main>
-      <nav className="ag-nav">
-        <div className="ag-container ag-nav-inner">
-          <Link href="/" className="ag-logo">
-            <span className="ag-logo-mark" aria-hidden="true">
-              <span /><span /><span /><span />
-            </span>
-            <span className="ag-logo-word">AppGrid</span>
-          </Link>
-          <div className="ag-nav-actions">
-            <LanguageToggle />
-            <Link href="/auth" className="ag-btn ag-btn-primary ag-btn-sm">
-              {t('nav.publish')}
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero */}
       <section className="ag-mkt-hero">

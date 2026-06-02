@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/app/i18n/useLanguage'
+import LanguageToggle from '@/app/components/LanguageToggle'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
 import DescriptionEditor from './DescriptionEditor'
@@ -21,23 +23,9 @@ interface App {
   created_at?: string
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  general: 'General',
-  productivity: 'Productividad',
-  health: 'Salud',
-  education: 'Educación',
-  finance: 'Finanzas',
-  sports: 'Deportes',
-  community: 'Comunidad',
-  other: 'Otro',
-}
-
-function categoryLabel(cat: string) {
-  return CATEGORY_LABELS[cat] ?? cat.charAt(0).toUpperCase() + cat.slice(1)
-}
-
-function formatPrice(price: string, currency?: string) {
-  if (price === '0' || price === '0.00' || !price) return 'Gratis'
+function formatPrice(price: string, currency?: string, t?: any) {
+  const freeLabel = t ? t('pricing.free') : 'Free'
+  if (price === '0' || price === '0.00' || !price) return freeLabel
 
   const localeMap: { [key: string]: string } = {
     USD: 'en-US',
@@ -79,6 +67,7 @@ interface Purchase {
 
 export default function AdminPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [user, setUser] = useState<User | null>(null)
   const [loadingAuth, setLoadingAuth] = useState(true)
   const [formData, setFormData] = useState(emptyForm)
@@ -89,6 +78,10 @@ export default function AdminPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'form' | 'apps' | 'buyers'>('form')
   const [showForm, setShowForm] = useState(true)
+
+  const getCategoryLabel = (cat: string): string => {
+    return t(`categories.${cat}`, cat.charAt(0).toUpperCase() + cat.slice(1))
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -171,16 +164,16 @@ export default function AdminPage() {
       })
 
       if (response.ok) {
-        setMessage(editingId ? '✅ App actualizada!' : '✅ App publicada!')
+        setMessage(editingId ? t('admin.appUpdated') : t('admin.appSuccess'))
         setFormData(emptyForm)
         setEditingId(null)
         fetchApps()
         setTimeout(() => setMessage(''), 3000)
       } else {
-        setMessage('❌ Error al guardar la app')
+        setMessage(t('admin.appError'))
       }
     } catch {
-      setMessage('❌ Error de conexión')
+      setMessage(t('admin.connectionError'))
     } finally {
       setLoading(false)
     }
@@ -204,18 +197,18 @@ export default function AdminPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro que querés eliminar esta app?')) return
+    if (!confirm(t('admin.confirmDelete'))) return
     try {
       const response = await fetch(`/api/apps?id=${id}&user_id=${user?.id}`, { method: 'DELETE' })
       if (response.ok) {
-        setMessage('✅ App eliminada!')
+        setMessage(t('admin.appDeleted'))
         fetchApps()
         setTimeout(() => setMessage(''), 3000)
       } else {
-        setMessage('❌ Error al eliminar la app')
+        setMessage(t('admin.deleteError'))
       }
     } catch {
-      setMessage('❌ Error de conexión')
+      setMessage(t('admin.connectionError'))
     }
   }
 
@@ -230,22 +223,23 @@ export default function AdminPage() {
   }
 
   if (loadingAuth) {
-    return <div className="ag-admin-loading">Cargando...</div>
+    return <div className="ag-admin-loading">{t('admin.loading')}</div>
   }
 
   return (
     <div className="ag-admin-container">
       <div className="ag-admin-header">
         <div>
-          <h1>Panel de Admin</h1>
-          <p>{user?.email} · {apps.length} apps publicadas</p>
+          <h1>{t('admin.title')}</h1>
+          <p>{user?.email} · {apps.length} {t('admin.appsPublished')}</p>
         </div>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <LanguageToggle />
           <Link href="/marketplace" className="ag-btn ag-btn-ghost ag-btn-sm">
-            Ver marketplace
+            {t('admin.viewMarketplace')}
           </Link>
           <button className="ag-btn ag-btn-ghost ag-btn-sm" onClick={handleLogout}>
-            Salir
+            {t('admin.logout')}
           </button>
         </div>
       </div>
@@ -256,19 +250,19 @@ export default function AdminPage() {
             className={`ag-tab ${activeTab === 'form' ? 'active' : ''}`}
             onClick={() => { setActiveTab('form'); setShowForm(true) }}
           >
-            {editingId ? 'Editar app' : 'Nueva app'}
+            {editingId ? t('admin.editApp') : t('admin.newApp')}
           </button>
           <button
             className={`ag-tab ${activeTab === 'apps' ? 'active' : ''}`}
             onClick={() => { setActiveTab('apps'); setShowForm(false) }}
           >
-            Mis apps ({apps.length})
+            {t('admin.myApps')} ({apps.length})
           </button>
           <button
             className={`ag-tab ${activeTab === 'buyers' ? 'active' : ''}`}
             onClick={() => setActiveTab('buyers')}
           >
-            Compradores {purchases.filter(p => p.status === 'pending').length > 0 && (
+            {t('admin.buyers')} {purchases.filter(p => p.status === 'pending').length > 0 && (
               <span className="ag-tab-badge">{purchases.filter(p => p.status === 'pending').length}</span>
             )}
           </button>
@@ -277,17 +271,17 @@ export default function AdminPage() {
         {activeTab === 'form' && (
           <form onSubmit={handleSubmit} className="ag-admin-form">
             <div className="ag-form-group">
-              <label htmlFor="title">Nombre de la app *</label>
+              <label htmlFor="title">{t('admin.appName')} *</label>
               <input
                 id="title" type="text" name="title"
-                placeholder="ej: GoPlanify"
+                placeholder={t('admin.appNamePlaceholder')}
                 value={formData.title} onChange={handleChange}
                 className="ag-input" required
               />
             </div>
 
             <div className="ag-form-group">
-              <label htmlFor="description">Descripción *</label>
+              <label htmlFor="description">{t('admin.description')} *</label>
               <DescriptionEditor
                 value={formData.description}
                 onChange={handleDescriptionChange}
@@ -295,34 +289,29 @@ export default function AdminPage() {
             </div>
 
             <div className="ag-form-group">
-              <label htmlFor="keywords">Keywords</label>
+              <label htmlFor="keywords">{t('admin.keywords')}</label>
               <input
                 id="keywords" type="text" name="keywords"
-                placeholder="ej: facturación, AFIP, pymes, automatización"
+                placeholder={t('admin.keywordsPlaceholder')}
                 value={(formData as any).keywords} onChange={handleChange}
                 className="ag-input"
               />
               <small style={{ color: 'var(--ag-ink-3)', fontSize: '0.8rem' }}>
-                Separadas por coma. Ayudan a que te encuentren en el buscador.
+                {t('admin.keywordsHelp')}
               </small>
             </div>
 
             <div className="ag-form-row">
               <div className="ag-form-group">
-                <label htmlFor="category">Categoría</label>
+                <label htmlFor="category">{t('admin.category')}</label>
                 <select id="category" name="category" value={formData.category} onChange={handleChange} className="ag-select">
-                  <option value="general">General</option>
-                  <option value="productivity">Productividad</option>
-                  <option value="health">Salud</option>
-                  <option value="education">Educación</option>
-                  <option value="finance">Finanzas</option>
-                  <option value="sports">Deportes</option>
-                  <option value="community">Comunidad</option>
-                  <option value="other">Otro</option>
+                  {['general', 'productivity', 'health', 'education', 'finance', 'sports', 'community', 'other'].map(cat => (
+                    <option key={cat} value={cat}>{t(`categories.${cat}`)}</option>
+                  ))}
                 </select>
               </div>
               <div className="ag-form-group">
-                <label htmlFor="price">Precio</label>
+                <label htmlFor="price">{t('admin.price')}</label>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <select id="currency" name="currency" value={(formData as any).currency} onChange={handleChange} className="ag-select" style={{ width: '90px', flexShrink: 0 }}>
                     <option value="USD">USD</option>
@@ -331,53 +320,53 @@ export default function AdminPage() {
                   </select>
                   <input
                     id="price" type="number" name="price"
-                    placeholder="0 = Gratis"
+                    placeholder={t('admin.priceFreeNote')}
                     value={formData.price} onChange={handleChange}
                     className="ag-input" min="0" step="0.01"
                   />
                 </div>
               </div>
               <div className="ag-form-group">
-                <label htmlFor="pricing_type">Tipo de cobro</label>
+                <label htmlFor="pricing_type">{t('admin.pricingType')}</label>
                 <select id="pricing_type" name="pricing_type" value={formData.pricing_type} onChange={handleChange} className="ag-select">
-                  <option value="one_time">Pago único</option>
-                  <option value="weekly">Suscripción semanal</option>
-                  <option value="monthly">Suscripción mensual</option>
-                  <option value="yearly">Suscripción anual</option>
+                  <option value="one_time">{t('admin.oneTime')}</option>
+                  <option value="weekly">{t('admin.weeklySub')}</option>
+                  <option value="monthly">{t('admin.monthlySub')}</option>
+                  <option value="yearly">{t('admin.yearlySub')}</option>
                 </select>
               </div>
             </div>
 
             <div className="ag-form-group">
-              <label htmlFor="image_url">Logo/Imagen (URL)</label>
+              <label htmlFor="image_url">{t('admin.image')}</label>
               <input
                 id="image_url" type="url" name="image_url"
-                placeholder="https://..."
+                placeholder={t('admin.imagePlaceholder')}
                 value={formData.image_url} onChange={handleChange}
                 className="ag-input"
               />
             </div>
 
             <div className="ag-form-group">
-              <label htmlFor="app_url">URL de la app *</label>
+              <label htmlFor="app_url">{t('admin.appUrl')} *</label>
               <input
                 id="app_url" type="url" name="app_url"
-                placeholder="https://tuapp.com"
+                placeholder={t('admin.appUrlPlaceholder')}
                 value={formData.app_url} onChange={handleChange}
                 className="ag-input" required
               />
             </div>
 
             <div className="ag-form-group">
-              <label htmlFor="payment_url">Link de pago (MercadoPago u otro)</label>
+              <label htmlFor="payment_url">{t('admin.paymentUrl')}</label>
               <input
                 id="payment_url" type="url" name="payment_url"
-                placeholder="https://mpago.la/..."
+                placeholder={t('admin.paymentUrlPlaceholder')}
                 value={formData.payment_url} onChange={handleChange}
                 className="ag-input"
               />
               <small style={{ color: 'var(--ag-ink-3)', fontSize: '0.8rem' }}>
-                Si no cargás un link, la app aparece como gratuita con acceso directo.
+                {t('admin.paymentUrlHelp')}
               </small>
             </div>
 
@@ -394,7 +383,7 @@ export default function AdminPage() {
                 style={{ flex: 1, padding: '1rem' }}
                 disabled={loading}
               >
-                {loading ? 'Guardando...' : editingId ? 'Guardar cambios' : 'Publicar app'}
+                {loading ? t('admin.saving') : editingId ? t('admin.saveChanges') : t('admin.publishApp')}
               </button>
               {editingId && (
                 <button
@@ -403,7 +392,7 @@ export default function AdminPage() {
                   style={{ padding: '1rem', minWidth: '120px' }}
                   onClick={handleCancel}
                 >
-                  Cancelar
+                  {t('admin.cancel')}
                 </button>
               )}
             </div>
@@ -414,19 +403,19 @@ export default function AdminPage() {
           <div className="ag-apps-list">
             {apps.length === 0 ? (
               <div className="ag-empty-state">
-                <p>No hay apps publicadas todavía</p>
+                <p>{t('admin.noApps')}</p>
                 <button className="ag-btn ag-btn-primary" onClick={() => setActiveTab('form')}>
-                  Crear la primera app
+                  {t('admin.createFirst')}
                 </button>
               </div>
             ) : (
               <table className="ag-table">
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Acciones</th>
+                    <th>{t('admin.app')}</th>
+                    <th>{t('admin.category')}</th>
+                    <th>{t('admin.price')}</th>
+                    <th>{t('admin.action')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -436,11 +425,11 @@ export default function AdminPage() {
                         <strong>{app.title}</strong><br />
                         <small>{app.description.substring(0, 50)}...</small>
                       </td>
-                      <td>{categoryLabel(app.category)}</td>
-                      <td>{formatPrice(app.price, app.currency)}</td>
+                      <td>{getCategoryLabel(app.category)}</td>
+                      <td>{formatPrice(app.price, app.currency, t)}</td>
                       <td className="ag-table-actions">
-                        <button className="ag-btn-sm ag-btn-edit" onClick={() => handleEdit(app)}>Editar</button>
-                        <button className="ag-btn-sm ag-btn-delete" onClick={() => handleDelete(app.id)}>Eliminar</button>
+                        <button className="ag-btn-sm ag-btn-edit" onClick={() => handleEdit(app)}>{t('admin.edit')}</button>
+                        <button className="ag-btn-sm ag-btn-delete" onClick={() => handleDelete(app.id)}>{t('admin.delete')}</button>
                       </td>
                     </tr>
                   ))}
@@ -453,17 +442,17 @@ export default function AdminPage() {
           <div className="ag-apps-list">
             {purchases.length === 0 ? (
               <div className="ag-empty-state">
-                <p>Todavía no hay compradores.</p>
+                <p>{t('admin.noBuyers')}</p>
               </div>
             ) : (
               <table className="ag-table">
                 <thead>
                   <tr>
-                    <th>Email</th>
-                    <th>App</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
+                    <th>{t('admin.email')}</th>
+                    <th>{t('admin.app')}</th>
+                    <th>{t('admin.date')}</th>
+                    <th>{t('admin.status')}</th>
+                    <th>{t('admin.action')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -471,12 +460,12 @@ export default function AdminPage() {
                     <tr key={p.id}>
                       <td><strong>{p.buyer_email}</strong></td>
                       <td>{p.apps?.title}</td>
-                      <td><small>{new Date(p.created_at).toLocaleDateString('es-AR')}</small></td>
+                      <td><small>{new Date(p.created_at).toLocaleDateString('en-US')}</small></td>
                       <td>
                         <span className={`ag-status ag-status-${p.status}`}>
-                          {p.status === 'pending' && 'Pendiente'}
-                          {p.status === 'approved' && 'Aprobado'}
-                          {p.status === 'access_sent' && 'Acceso enviado'}
+                          {p.status === 'pending' && t('admin.pending')}
+                          {p.status === 'approved' && t('admin.approved')}
+                          {p.status === 'access_sent' && t('admin.accessSent')}
                         </span>
                       </td>
                       <td className="ag-table-actions">
@@ -485,7 +474,7 @@ export default function AdminPage() {
                             className="ag-btn-sm ag-btn-edit"
                             onClick={() => updatePurchaseStatus(p.id, 'approved')}
                           >
-                            Aprobar
+                            {t('admin.approve')}
                           </button>
                         )}
                         {p.status === 'approved' && (
@@ -493,7 +482,7 @@ export default function AdminPage() {
                             className="ag-btn-sm ag-btn-edit"
                             onClick={() => updatePurchaseStatus(p.id, 'access_sent')}
                           >
-                            Marcar acceso enviado
+                            {t('admin.markAccessSent')}
                           </button>
                         )}
                       </td>

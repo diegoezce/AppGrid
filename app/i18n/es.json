@@ -139,6 +139,54 @@
     "paymentMessage": "Completá el pago en la ventana que se abrió. Una vez confirmado, el dev te enviará el acceso a",
     "close": "Cerrar"
   },
+  "builders": {
+    "title": "Explorá Builders",
+    "subtitle": "Descubrí qué están construyendo otros developers",
+    "mostFollowers": "Más seguidores",
+    "mostApps": "Más apps",
+    "noBuilders": "No se encontraron builders",
+    "loading": "Cargando builders...",
+    "error": "Error al cargar los builders. Intentá de nuevo.",
+    "notFound": "Builder no encontrado",
+    "backToBuilders": "← Volver a Builders",
+    "loadingProfile": "Cargando perfil...",
+    "noApps": "Sin apps todavía",
+    "noUpdates": "Sin actualizaciones todavía",
+    "tabApps": "Apps",
+    "tabUpdates": "Actualizaciones"
+  },
+  "feed": {
+    "loading": "Cargando feed...",
+    "error": "Error al cargar el feed. Intentá de nuevo.",
+    "subtitle": "Actualizaciones de los builders que seguís",
+    "emptyTitle": "Todavía no hay actualizaciones",
+    "emptyDesc": "Seguí builders para ver sus últimas novedades",
+    "exploreBuilders": "Explorar Builders"
+  },
+  "follow": {
+    "follow": "Seguir",
+    "unfollow": "Dejar de seguir",
+    "loading": "Cargando..."
+  },
+  "stats": {
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "apps": "Apps"
+  },
+  "comments": {
+    "loading": "Cargando...",
+    "empty": "Sin comentarios aún. ¡Sé el primero!",
+    "delete": "Eliminar",
+    "placeholder": "Escribí un comentario...",
+    "send": "Enviar",
+    "loginLink": "Iniciá sesión",
+    "loginSuffix": "para comentar",
+    "error": "Error al publicar el comentario",
+    "justNow": "ahora",
+    "minutesAgo": "m",
+    "hoursAgo": "h",
+    "daysAgo": "d"
+  },
   "admin": {
     "title": "Panel de Admin",
     "loading": "Cargando...",

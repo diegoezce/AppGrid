@@ -8,6 +8,7 @@ import BuilderStats from '@/app/components/BuilderStats'
 import UpdateFeedItem from '@/app/components/UpdateFeedItem'
 import Navigation from '@/app/components/Navigation'
 import { supabase } from '@/lib/supabase'
+import { useLanguage } from '@/app/i18n/useLanguage'
 import './builder-profile.css'
 
 interface Builder {
@@ -50,6 +51,7 @@ export default function BuilderProfilePage() {
   const [hasError, setHasError] = useState(false)
   const [activeTab, setActiveTab] = useState<'apps' | 'updates'>('apps')
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (!username) return
@@ -90,7 +92,7 @@ export default function BuilderProfilePage() {
       <>
         <Navigation />
         <div className="ag-builder-profile-container">
-          <div className="ag-loading">Loading profile...</div>
+          <div className="ag-loading">{t('builders.loadingProfile')}</div>
         </div>
       </>
     )
@@ -101,8 +103,8 @@ export default function BuilderProfilePage() {
       <>
         <Navigation />
         <div className="ag-builder-profile-container">
-          <div className="ag-error">Builder not found</div>
-          <Link href="/builders" className="ag-back-link">← Back to Builders</Link>
+          <div className="ag-error">{t('builders.notFound')}</div>
+          <Link href="/builders" className="ag-back-link">{t('builders.backToBuilders')}</Link>
         </div>
       </>
     )
@@ -112,7 +114,7 @@ export default function BuilderProfilePage() {
     <>
       <Navigation />
       <div className="ag-builder-profile-container">
-        <Link href="/builders" className="ag-back-link">← Builders</Link>
+        <Link href="/builders" className="ag-back-link">{t('builders.backToBuilders')}</Link>
 
         <div className="ag-builder-profile-header">
           {builder.avatar_url && (
@@ -146,20 +148,20 @@ export default function BuilderProfilePage() {
             className={activeTab === 'apps' ? 'active' : ''}
             onClick={() => setActiveTab('apps')}
           >
-            Apps ({apps.length})
+            {t('builders.tabApps')} ({apps.length})
           </button>
           <button
             className={activeTab === 'updates' ? 'active' : ''}
             onClick={() => setActiveTab('updates')}
           >
-            Updates ({updates.length})
+            {t('builders.tabUpdates')} ({updates.length})
           </button>
         </div>
 
         {activeTab === 'apps' && (
           <div className="ag-builder-apps">
             {apps.length === 0 ? (
-              <p className="ag-empty-message">No apps yet</p>
+              <p className="ag-empty-message">{t('builders.noApps')}</p>
             ) : (
               <div className="ag-apps-grid">
                 {apps.map(app => (
@@ -176,7 +178,7 @@ export default function BuilderProfilePage() {
         {activeTab === 'updates' && (
           <div className="ag-builder-updates">
             {updates.length === 0 ? (
-              <p className="ag-empty-message">No updates yet</p>
+              <p className="ag-empty-message">{t('builders.noUpdates')}</p>
             ) : (
               <div className="ag-updates-list">
                 {updates.map(update => (

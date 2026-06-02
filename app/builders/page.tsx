@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import BuilderCard from '@/app/components/BuilderCard'
 import Navigation from '@/app/components/Navigation'
 import { supabase } from '@/lib/supabase'
+import { useLanguage } from '@/app/i18n/useLanguage'
 import './builders.css'
 
 interface Builder {
@@ -24,6 +25,7 @@ export default function BuildersPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [followingSet, setFollowingSet] = useState<Set<string>>(new Set())
   const [sortBy, setSortBy] = useState<'followers' | 'apps'>('followers')
+  const { t } = useLanguage()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +62,7 @@ export default function BuildersPage() {
       <>
         <Navigation />
         <div className="ag-builders-container">
-          <div className="ag-loading">Loading builders...</div>
+          <div className="ag-loading">{t('builders.loading')}</div>
         </div>
       </>
     )
@@ -71,7 +73,7 @@ export default function BuildersPage() {
       <>
         <Navigation />
         <div className="ag-builders-container">
-          <div className="ag-error">Failed to load builders. Please try again.</div>
+          <div className="ag-error">{t('builders.error')}</div>
         </div>
       </>
     )
@@ -82,28 +84,28 @@ export default function BuildersPage() {
       <Navigation />
       <div className="ag-builders-container">
         <div className="ag-builders-header">
-          <h1>Explore Builders</h1>
-          <p>Discover what other builders are creating</p>
+          <h1>{t('builders.title')}</h1>
+          <p>{t('builders.subtitle')}</p>
 
           <div className="ag-builders-sort">
             <button
               className={sortBy === 'followers' ? 'active' : ''}
               onClick={() => setSortBy('followers')}
             >
-              Most Followers
+              {t('builders.mostFollowers')}
             </button>
             <button
               className={sortBy === 'apps' ? 'active' : ''}
               onClick={() => setSortBy('apps')}
             >
-              Most Apps
+              {t('builders.mostApps')}
             </button>
           </div>
         </div>
 
         {builders.length === 0 ? (
           <div className="ag-empty-state">
-            <p>No builders found</p>
+            <p>{t('builders.noBuilders')}</p>
           </div>
         ) : (
           <div className="ag-builders-grid">

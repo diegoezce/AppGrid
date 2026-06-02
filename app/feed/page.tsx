@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import UpdateFeedItem from '@/app/components/UpdateFeedItem'
 import Navigation from '@/app/components/Navigation'
 import { supabase } from '@/lib/supabase'
+import { useLanguage } from '@/app/i18n/useLanguage'
 import './feed.css'
 
 interface Update {
@@ -23,6 +24,7 @@ export default function FeedPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+  const { t } = useLanguage()
   const router = useRouter()
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function FeedPage() {
       <>
         <Navigation />
         <div className="ag-feed-container">
-          <div className="ag-loading">Loading feed...</div>
+          <div className="ag-loading">{t('feed.loading')}</div>
         </div>
       </>
     )
@@ -68,7 +70,7 @@ export default function FeedPage() {
       <>
         <Navigation />
         <div className="ag-feed-container">
-          <div className="ag-error">Failed to load feed. Please try again.</div>
+          <div className="ag-error">{t('feed.error')}</div>
         </div>
       </>
     )
@@ -80,14 +82,14 @@ export default function FeedPage() {
       <div className="ag-feed-container">
       <div className="ag-feed-header">
         <h1>Feed</h1>
-        <p>Updates from builders you follow</p>
+        <p>{t('feed.subtitle')}</p>
       </div>
 
       {updates.length === 0 ? (
         <div className="ag-empty-state">
-          <h2>No updates yet</h2>
-          <p>Follow builders to see their latest updates</p>
-          <a href="/builders" className="ag-button-primary">Explore Builders</a>
+          <h2>{t('feed.emptyTitle')}</h2>
+          <p>{t('feed.emptyDesc')}</p>
+          <a href="/builders" className="ag-button-primary">{t('feed.exploreBuilders')}</a>
         </div>
       ) : (
         <div className="ag-feed-list">

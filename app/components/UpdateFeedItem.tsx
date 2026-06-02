@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/app/i18n/useLanguage'
 
 interface Comment {
   id: string
@@ -23,16 +24,16 @@ interface UpdateFeedItemProps {
   currentUserId?: string
 }
 
-function formatTime(timestamp: string): string {
+function formatTime(timestamp: string, t: (key: string) => string): string {
   const diffMs = Date.now() - new Date(timestamp).getTime()
   const diffMins = Math.floor(diffMs / 60000)
   const diffHours = Math.floor(diffMins / 60)
   const diffDays = Math.floor(diffHours / 24)
 
-  if (diffMins < 1) return 'just now'
-  if (diffMins < 60) return `${diffMins}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
-  if (diffDays < 7) return `${diffDays}d ago`
+  if (diffMins < 1) return t('comments.justNow')
+  if (diffMins < 60) return `${diffMins}${t('comments.minutesAgo')}`
+  if (diffHours < 24) return `${diffHours}${t('comments.hoursAgo')}`
+  if (diffDays < 7) return `${diffDays}${t('comments.daysAgo')}`
   return new Date(timestamp).toLocaleDateString()
 }
 
@@ -59,6 +60,7 @@ export default function UpdateFeedItem({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [commentError, setCommentError] = useState<string | null>(null)
 
+  const { t } = useLanguage()
   const router = useRouter()
 
   const handleToggleLike = async () => {
@@ -128,14 +130,14 @@ export default function UpdateFeedItem({
       })
       const data = await res.json()
       if (!res.ok) {
-        setCommentError(data.error ?? 'Failed to post comment')
+        setCommentError(data.error ?? t('comments.error'))
         return
       }
       setComments(prev => [...prev, data])
       setCommentText('')
     } catch (error) {
       console.error('Post comment error:', error)
-      setCommentError('Failed to post comment')
+      setCommentError(t('comments.error'))
     } finally {
       setIsSubmitting(false)
     }
@@ -167,7 +169,7 @@ export default function UpdateFeedItem({
             <p className="ag-author-username">@{author.username}</p>
           </div>
         </Link>
-        <span className="ag-feed-timestamp">{formatTime(created_at)}</span>
+        <span className="ag-feed-timestamp">{formatTime(created_at, t)}</span>
       </div>
 
       <div className="ag-feed-item-content">
@@ -204,11 +206,11 @@ export default function UpdateFeedItem({
       {showComments && (
         <div className="ag-comments-section">
           {commentsLoading ? (
-            <p className="ag-comments-loading">Loading...</p>
+            <p className="ag-comments-loading">{t('comments.loading')}</p>
           ) : (
             <>
               {comments.length === 0 && (
-                <p className="ag-comments-empty">No comments yet. Be the first!</p>
+                <p className="ag-comments-empty">{t('comments.empty')}</p>
               )}
               <div className="ag-comments-list">
                 {comments.map(comment => (
@@ -221,13 +223,13 @@ export default function UpdateFeedItem({
                     </Link>
                     <p className="ag-comment-content">{comment.content}</p>
                     <div className="ag-comment-meta">
-                      <span className="ag-comment-time">{formatTime(comment.created_at)}</span>
+                      <span className="ag-comment-time">{formatTime(comment.created_at, t)}</span>
                       {currentUserId === comment.user.id && (
                         <button
                           onClick={() => handleDeleteComment(comment.id)}
                           className="ag-comment-delete"
                         >
-                          Delete
+                          {t('comments.delete')}
                         </button>
                       )}
                     </div>
@@ -245,7 +247,7 @@ export default function UpdateFeedItem({
                     type="text"
                     value={commentText}
                     onChange={e => setCommentText(e.target.value)}
-                    placeholder="Write a comment..."
+                    placeholder={t('comments.placeholder')}
                     maxLength={500}
                     className="ag-comment-input"
                     disabled={isSubmitting}
@@ -255,13 +257,13 @@ export default function UpdateFeedItem({
                     disabled={isSubmitting || !commentText.trim()}
                     className="ag-comment-submit"
                   >
-                    {isSubmitting ? '...' : 'Send'}
+                    {isSubmitting ? '...' : t('comments.send')}
                   </button>
                   </form>
                 </>
               ) : (
                 <p className="ag-comments-login">
-                  <Link href="/auth">Log in</Link> to comment
+                  <Link href="/auth">{t('comments.loginLink')}</Link> {t('comments.loginSuffix')}
                 </p>
               )}
             </>

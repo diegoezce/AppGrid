@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/app/i18n/useLanguage'
 
 interface FollowButtonProps {
   userId: string
@@ -18,6 +19,7 @@ export default function FollowButton({
 }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing)
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useLanguage()
   const router = useRouter()
 
   const handleToggleFollow = async () => {
@@ -55,7 +57,7 @@ export default function FollowButton({
       disabled={isLoading}
       className={`ag-follow-button ${isFollowing ? 'following' : ''}`}
     >
-      {isLoading ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow'}
+      {isLoading ? t('follow.loading') : isFollowing ? t('follow.unfollow') : t('follow.follow')}
     </button>
   )
 }

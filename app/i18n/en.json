@@ -139,6 +139,54 @@
     "paymentMessage": "Complete the payment in the window that opened. Once confirmed, the developer will send you access to",
     "close": "Close"
   },
+  "builders": {
+    "title": "Explore Builders",
+    "subtitle": "Discover what other developers are building",
+    "mostFollowers": "Most Followers",
+    "mostApps": "Most Apps",
+    "noBuilders": "No builders found",
+    "loading": "Loading builders...",
+    "error": "Failed to load builders. Please try again.",
+    "notFound": "Builder not found",
+    "backToBuilders": "← Back to Builders",
+    "loadingProfile": "Loading profile...",
+    "noApps": "No apps yet",
+    "noUpdates": "No updates yet",
+    "tabApps": "Apps",
+    "tabUpdates": "Updates"
+  },
+  "feed": {
+    "loading": "Loading feed...",
+    "error": "Failed to load feed. Please try again.",
+    "subtitle": "Updates from builders you follow",
+    "emptyTitle": "No updates yet",
+    "emptyDesc": "Follow builders to see their latest updates",
+    "exploreBuilders": "Explore Builders"
+  },
+  "follow": {
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "loading": "Loading..."
+  },
+  "stats": {
+    "followers": "Followers",
+    "following": "Following",
+    "apps": "Apps"
+  },
+  "comments": {
+    "loading": "Loading...",
+    "empty": "No comments yet. Be the first!",
+    "delete": "Delete",
+    "placeholder": "Write a comment...",
+    "send": "Send",
+    "loginLink": "Log in",
+    "loginSuffix": "to comment",
+    "error": "Failed to post comment",
+    "justNow": "just now",
+    "minutesAgo": "m ago",
+    "hoursAgo": "h ago",
+    "daysAgo": "d ago"
+  },
   "admin": {
     "title": "Admin Panel",
     "loading": "Loading...",

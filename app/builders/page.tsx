@@ -88,6 +88,7 @@ export default function BuildersPage() {
           <p>{t('builders.subtitle')}</p>
 
           <div className="ag-builders-sort">
+            <span className="ag-builders-sort-label">{t('builders.sortLabel')}</span>
             <button
               className={sortBy === 'followers' ? 'active' : ''}
               onClick={() => setSortBy('followers')}

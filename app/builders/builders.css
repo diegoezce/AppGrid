@@ -22,8 +22,17 @@
 
 .ag-builders-sort {
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.ag-builders-sort-label {
+  font-size: 0.8125rem;
+  color: var(--ag-text-secondary);
+  font-weight: 500;
+  margin-right: 0.25rem;
+  white-space: nowrap;
 }
 
 .ag-builders-sort button {

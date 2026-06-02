@@ -142,8 +142,9 @@
   "builders": {
     "title": "Explorá Builders",
     "subtitle": "Descubrí qué están construyendo otros developers",
-    "mostFollowers": "Más seguidores",
-    "mostApps": "Más apps",
+    "sortLabel": "Ordenar por:",
+    "mostFollowers": "Seguidores",
+    "mostApps": "Apps publicadas",
     "noBuilders": "No se encontraron builders",
     "loading": "Cargando builders...",
     "error": "Error al cargar los builders. Intentá de nuevo.",

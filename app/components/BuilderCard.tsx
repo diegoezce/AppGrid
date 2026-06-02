@@ -28,6 +28,8 @@ export default function BuilderCard({
   isOwnProfile = false,
   currentUserId
 }: BuilderCardProps) {
+  if (!username) return null
+
   return (
     <div className="ag-builder-card">
       <Link href={`/builders/${username}`} className="ag-builder-card-header">

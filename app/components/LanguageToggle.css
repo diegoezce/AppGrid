@@ -27,3 +27,15 @@
   color: #000000;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+@media (max-width: 768px) {
+  .ag-language-toggle {
+    padding: 0.15rem;
+  }
+
+  .ag-lang-btn {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.3rem;
+  }
+}

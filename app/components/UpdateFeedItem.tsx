@@ -232,10 +232,11 @@ export default function UpdateFeedItem({
               </div>
 
               {currentUserId ? (
-                {commentError && (
-                  <p className="ag-comment-error">{commentError}</p>
-                )}
-              <form onSubmit={handleSubmitComment} className="ag-comment-form">
+                <>
+                  {commentError && (
+                    <p className="ag-comment-error">{commentError}</p>
+                  )}
+                  <form onSubmit={handleSubmitComment} className="ag-comment-form">
                   <input
                     type="text"
                     value={commentText}
@@ -252,7 +253,8 @@ export default function UpdateFeedItem({
                   >
                     {isSubmitting ? '...' : 'Send'}
                   </button>
-                </form>
+                  </form>
+                </>
               ) : (
                 <p className="ag-comments-login">
                   <Link href="/auth">Log in</Link> to comment

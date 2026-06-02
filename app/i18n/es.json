@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "howWorks": "Cómo funciona",
+    "marketplace": "Marketplace",
+    "publish": "Publicar app",
+    "admin": "Admin"
+  },
+  "hero": {
+    "eyebrow": "Marketplace para devs · LATAM + España",
+    "title": "Convertí tus apps en ",
+    "titleHighlight": "ingresos reales",
+    "description": "AppGrid es el marketplace donde desarrolladores publican SaaS, scripts y automatizaciones. Nosotros nos encargamos de la parte que odiás: empaquetar, posicionar y vender.",
+    "publishCta": "Publicá tu app →",
+    "exploreCta": "Ver marketplace"
+  },
+  "stats": {
+    "appsPublished": "apps publicadas",
+    "region": "LATAM + España",
+    "freePricing": "publicar hoy"
+  },
+  "howWorks": {
+    "title": "Cómo funciona",
+    "subtitle": "En tres pasos tenés tu app generando ingresos.",
+    "step1": "Publicás tu app",
+    "step1Desc": "Subís tu SaaS, script o automatización desde el panel de admin. Precio, descripción, categoría — listo.",
+    "step2": "Llegamos a compradores",
+    "step2Desc": "Tu app aparece en el marketplace frente a developers y empresas de LATAM y España buscando soluciones.",
+    "step3": "Cobrás directo",
+    "step3Desc": "El comprador paga por tu link de MercadoPago. Vos recibís el dinero y le dás acceso. Sin intermediarios."
+  },
+  "features": {
+    "title": "Por qué AppGrid",
+    "subtitle": "Todo lo que necesitás para monetizar tu código.",
+    "feature1": "Setup en minutos",
+    "feature1Desc": "Sin configurar servidores de pagos ni landing pages. Publicás y ya estás vendiendo.",
+    "feature2": "Mercado hispanohablante",
+    "feature2Desc": "Accedé a millones de desarrolladores y empresas en España, Argentina, México, Colombia y más.",
+    "feature3": "Vos fijás el precio",
+    "feature3Desc": "Precio único, suscripción mensual, o lo que mejor funcione para tu producto. Sin restricciones."
+  },
+  "roadmap": {
+    "title": "Lo que viene",
+    "subtitle": "AppGrid está creciendo. Esto es lo que estamos construyendo.",
+    "item1": "Distribución con IA",
+    "item1Desc": "Herramientas para que tu app llegue exactamente a la audiencia que la necesita.",
+    "item2": "Analytics de tu app",
+    "item2Desc": "Cuántas visitas, de dónde vienen, qué convierte. Todo en un dashboard.",
+    "item3": "Pagos integrados",
+    "item3Desc": "Procesá cobros directamente desde AppGrid, sin salir de la plataforma."
+  },
+  "finalCta": {
+    "title": "¿Tenés una app lista?",
+    "subtitle": "Publicala hoy. Es gratis y tarda menos de 5 minutos.",
+    "button": "Empezar ahora →"
+  },
+  "footer": {
+    "copyright": "© 2026 AppGrid. Todos los derechos reservados."
+  },
+  "marketplace": {
+    "eyebrow": "apps disponibles · LATAM + España",
+    "title": "Encontrá la app",
+    "titleHighlight": "perfecta para tu negocio.",
+    "searchPlaceholder": "Buscar apps...",
+    "featured": "Mejor valoradas",
+    "allCategories": "Todos",
+    "loading": "Cargando apps...",
+    "noResults": "Sin resultados",
+    "noResultsDesc": "Probá con otra búsqueda.",
+    "noAppsCategory": "No hay apps en esta categoría",
+    "noAppsCategoryDesc": "Sé el primero en publicar tu app.",
+    "resultLabel": "resultado",
+    "resultLabelPlural": "resultados",
+    "for": "para",
+    "viewDetail": "Ver detalle",
+    "goToApp": "Ir a la app →"
+  },
+  "categories": {
+    "general": "General",
+    "productivity": "Productividad",
+    "health": "Salud",
+    "education": "Educación",
+    "finance": "Finanzas",
+    "sports": "Deportes",
+    "community": "Comunidad",
+    "other": "Otro"
+  },
+  "pricing": {
+    "free": "Gratis",
+    "weekly": "/sem",
+    "monthly": "/mes",
+    "yearly": "/año"
+  },
+  "rating": {
+    "vote": "voto",
+    "votes": "votos",
+    "noRatings": "Sin valoraciones",
+    "rateApp": "Calificá esta app"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "email": "Email",
+    "password": "Contraseña",
+    "minCharacters": "Mínimo 6 caracteres",
+    "passwordPlaceholder": "••••••••",
+    "loading": "Cargando...",
+    "submit": "Entrar",
+    "submitSignup": "Crear cuenta",
+    "confirmEmail": "Revisá tu email para confirmar la cuenta."
+  }
+}

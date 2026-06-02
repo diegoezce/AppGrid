@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
+import { LanguageProvider } from '@/app/i18n/context'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'AppGrid — Convertí tus apps en ingresos',
-  description: 'Marketplace para desarrolladores. Publica SaaS, scripts y automatizaciones.',
+  title: 'AppGrid — Turn your apps into income',
+  description: 'Marketplace for developers. Publish SaaS, scripts and automations.',
 }
 
 export default function RootLayout({
@@ -13,7 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   )
 }

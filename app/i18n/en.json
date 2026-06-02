@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "howWorks": "How it works",
+    "marketplace": "Marketplace",
+    "publish": "Publish app",
+    "admin": "Admin"
+  },
+  "hero": {
+    "eyebrow": "Marketplace for devs · LATAM + Spain",
+    "title": "Turn your apps into ",
+    "titleHighlight": "real income",
+    "description": "AppGrid is the marketplace where developers publish SaaS, scripts and automations. We handle the part you hate: packaging, positioning and selling.",
+    "publishCta": "Publish your app →",
+    "exploreCta": "Explore marketplace"
+  },
+  "stats": {
+    "appsPublished": "apps published",
+    "region": "LATAM + Spain",
+    "freePricing": "publish today"
+  },
+  "howWorks": {
+    "title": "How it works",
+    "subtitle": "In three steps your app generates income.",
+    "step1": "You publish your app",
+    "step1Desc": "Upload your SaaS, script or automation from the admin panel. Price, description, category — done.",
+    "step2": "We bring you buyers",
+    "step2Desc": "Your app appears in the marketplace in front of developers and companies from LATAM and Spain looking for solutions.",
+    "step3": "Get paid directly",
+    "step3Desc": "The buyer pays through your MercadoPago link. You get the money and give them access. No intermediaries."
+  },
+  "features": {
+    "title": "Why AppGrid",
+    "subtitle": "Everything you need to monetize your code.",
+    "feature1": "Setup in minutes",
+    "feature1Desc": "No payment servers or landing pages to configure. Publish and start selling.",
+    "feature2": "Spanish-speaking market",
+    "feature2Desc": "Access millions of developers and companies in Spain, Argentina, Mexico, Colombia and more.",
+    "feature3": "You set the price",
+    "feature3Desc": "One-time price, monthly subscription, or whatever works best for your product. No restrictions."
+  },
+  "roadmap": {
+    "title": "What's coming",
+    "subtitle": "AppGrid is growing. Here's what we're building.",
+    "item1": "AI-powered distribution",
+    "item1Desc": "Tools to get your app to exactly the audience that needs it.",
+    "item2": "App analytics",
+    "item2Desc": "How many visits, where they come from, what converts. All in one dashboard.",
+    "item3": "Built-in payments",
+    "item3Desc": "Process payments directly from AppGrid, without leaving the platform."
+  },
+  "finalCta": {
+    "title": "Got an app ready?",
+    "subtitle": "Publish it today. It's free and takes less than 5 minutes.",
+    "button": "Get started now →"
+  },
+  "footer": {
+    "copyright": "© 2026 AppGrid. All rights reserved."
+  },
+  "marketplace": {
+    "eyebrow": "apps available · LATAM + Spain",
+    "title": "Find the perfect",
+    "titleHighlight": "app for your business.",
+    "searchPlaceholder": "Search apps...",
+    "featured": "Top rated",
+    "allCategories": "All",
+    "loading": "Loading apps...",
+    "noResults": "No results",
+    "noResultsDesc": "Try a different search.",
+    "noAppsCategory": "No apps in this category",
+    "noAppsCategoryDesc": "Be the first to publish your app.",
+    "resultLabel": "result",
+    "resultLabelPlural": "results",
+    "for": "for",
+    "viewDetail": "View details",
+    "goToApp": "Go to app →"
+  },
+  "categories": {
+    "general": "General",
+    "productivity": "Productivity",
+    "health": "Health",
+    "education": "Education",
+    "finance": "Finance",
+    "sports": "Sports",
+    "community": "Community",
+    "other": "Other"
+  },
+  "pricing": {
+    "free": "Free",
+    "weekly": "/week",
+    "monthly": "/month",
+    "yearly": "/year"
+  },
+  "rating": {
+    "vote": "vote",
+    "votes": "votes",
+    "noRatings": "No ratings",
+    "rateApp": "Rate this app"
+  },
+  "auth": {
+    "login": "Sign in",
+    "signup": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "minCharacters": "Minimum 6 characters",
+    "passwordPlaceholder": "••••••••",
+    "loading": "Loading...",
+    "submit": "Sign in",
+    "submitSignup": "Create account",
+    "confirmEmail": "Check your email to confirm your account."
+  }
+}

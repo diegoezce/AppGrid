@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/app/i18n/useLanguage'
 import { supabase } from '@/lib/supabase'
 import './auth.css'
 
 export default function AuthPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [tab, setTab] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -37,7 +39,7 @@ export default function AuthPage() {
       if (error) {
         setMessage({ text: error.message, ok: false })
       } else {
-        setMessage({ text: 'Revisá tu email para confirmar la cuenta.', ok: true })
+        setMessage({ text: t('auth.confirmEmail'), ok: true })
       }
     }
 
@@ -59,24 +61,24 @@ export default function AuthPage() {
             className={`ag-auth-tab ${tab === 'login' ? 'active' : ''}`}
             onClick={() => { setTab('login'); setMessage(null) }}
           >
-            Iniciar sesión
+            {t('auth.login')}
           </button>
           <button
             className={`ag-auth-tab ${tab === 'signup' ? 'active' : ''}`}
             onClick={() => { setTab('signup'); setMessage(null) }}
           >
-            Crear cuenta
+            {t('auth.signup')}
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="ag-auth-form">
           <div className="ag-form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('auth.email')}</label>
             <input
               id="email"
               type="email"
               className="ag-input"
-              placeholder="tu@email.com"
+              placeholder="you@email.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
@@ -84,12 +86,12 @@ export default function AuthPage() {
             />
           </div>
           <div className="ag-form-group">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">{t('auth.password')}</label>
             <input
               id="password"
               type="password"
               className="ag-input"
-              placeholder={tab === 'signup' ? 'Mínimo 6 caracteres' : '••••••••'}
+              placeholder={tab === 'signup' ? t('auth.minCharacters') : t('auth.passwordPlaceholder')}
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
@@ -109,7 +111,7 @@ export default function AuthPage() {
             className="ag-btn ag-btn-primary ag-auth-submit"
             disabled={loading}
           >
-            {loading ? 'Cargando...' : tab === 'login' ? 'Entrar' : 'Crear cuenta'}
+            {loading ? t('auth.loading') : tab === 'login' ? t('auth.submit') : t('auth.submitSignup')}
           </button>
         </form>
       </div>

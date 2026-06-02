@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '@/app/i18n/useLanguage'
 
 interface AppRatingProps {
   rating: number
@@ -10,6 +11,7 @@ interface AppRatingProps {
 }
 
 export default function AppRating({ rating, count, appId, onRate }: AppRatingProps) {
+  const { t } = useLanguage()
   const [hovered, setHovered] = useState<number | null>(null)
   const [voted, setVoted] = useState(() => {
     if (typeof window === 'undefined' || !appId) return false
@@ -51,7 +53,7 @@ export default function AppRating({ rating, count, appId, onRate }: AppRatingPro
       <div
         className={`ag-rating-segments ${interactive ? 'ag-rating-interactive' : ''}`}
         onMouseLeave={() => interactive && setHovered(null)}
-        title={interactive ? 'Calificá esta app' : `${rating.toFixed(1)} / 5`}
+        title={interactive ? t('rating.rateApp', 'Rate this app') : `${rating.toFixed(1)} / 5`}
       >
         {[0, 1, 2, 3, 4].map(i => (
           <div
@@ -65,7 +67,7 @@ export default function AppRating({ rating, count, appId, onRate }: AppRatingPro
         ))}
       </div>
       <span className="ag-rating-label">
-        {count > 0 ? `${rating.toFixed(1)} · ${count} voto${count !== 1 ? 's' : ''}` : 'Sin calificaciones'}
+        {count > 0 ? `${rating.toFixed(1)} · ${count} ${count !== 1 ? t('rating.votes') : t('rating.vote')}` : t('rating.noRatings')}
       </span>
     </div>
   )

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/app/i18n/useLanguage'
+import LanguageToggle from '@/app/components/LanguageToggle'
 import AppRating from '@/app/components/AppRating'
 import './marketplace.css'
 
@@ -21,23 +23,8 @@ interface App {
   created_at?: string
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  general: 'General',
-  productivity: 'Productividad',
-  health: 'Salud',
-  education: 'Educación',
-  finance: 'Finanzas',
-  sports: 'Deportes',
-  community: 'Comunidad',
-  other: 'Otro',
-}
-
-function categoryLabel(cat: string) {
-  return CATEGORY_LABELS[cat] ?? cat.charAt(0).toUpperCase() + cat.slice(1)
-}
-
-function formatPrice(price: string, currency: string, pricingType: string) {
-  if (price === '0' || price === '0.00' || !price) return 'Gratis'
+function formatPrice(price: string, currency: string, pricingType: string, t: any) {
+  if (price === '0' || price === '0.00' || !price) return t('pricing.free')
 
   const localeMap: { [key: string]: string } = {
     USD: 'en-US',
@@ -52,11 +39,17 @@ function formatPrice(price: string, currency: string, pricingType: string) {
     maximumFractionDigits: 2,
   }).format(numPrice)
 
-  const suffix = pricingType === 'weekly' ? '/sem' : pricingType === 'monthly' ? '/mes' : pricingType === 'yearly' ? '/año' : ''
+  const suffixMap: Record<string, string> = {
+    weekly: 'pricing.weekly',
+    monthly: 'pricing.monthly',
+    yearly: 'pricing.yearly',
+  }
+  const suffix = suffixMap[pricingType] ? t(suffixMap[pricingType]) : ''
   return `$${formatted}${suffix}`
 }
 
 export default function MarketplacePage() {
+  const { t } = useLanguage()
   const [apps, setApps] = useState<App[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -69,6 +62,10 @@ export default function MarketplacePage() {
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
+
+  const getCategoryLabel = (cat: string): string => {
+    return t(`categories.${cat}`, cat.charAt(0).toUpperCase() + cat.slice(1))
+  }
 
   const categories = Array.from(new Set(apps.map(app => app.category)))
 
@@ -101,8 +98,9 @@ export default function MarketplacePage() {
             <span className="ag-logo-word">AppGrid</span>
           </Link>
           <div className="ag-nav-actions">
+            <LanguageToggle />
             <Link href="/auth" className="ag-btn ag-btn-primary ag-btn-sm">
-              Publicar app
+              {t('nav.publish')}
             </Link>
           </div>
         </div>
@@ -111,14 +109,14 @@ export default function MarketplacePage() {
       {/* Hero */}
       <section className="ag-mkt-hero">
         <div className="ag-container ag-mkt-hero-inner">
-          <p className="ag-mkt-eyebrow">{apps.length} apps disponibles · LATAM + España</p>
-          <h1 className="ag-h1">Encontrá la app<br />perfecta para tu negocio.</h1>
+          <p className="ag-mkt-eyebrow">{apps.length} {t('marketplace.eyebrow')}</p>
+          <h1 className="ag-h1">{t('marketplace.title')}<br />{t('marketplace.titleHighlight')}</h1>
           <div className="ag-mkt-search">
             <span className="ag-mkt-search-icon">⌕</span>
             <input
               type="search"
               className="ag-mkt-search-input"
-              placeholder="Buscar apps..."
+              placeholder={t('marketplace.searchPlaceholder')}
               value={search}
               onChange={e => setSearch(e.target.value)}
               autoComplete="off"
@@ -134,7 +132,7 @@ export default function MarketplacePage() {
       {!loading && featured.length > 0 && !search && !selectedCategory && (
         <section className="ag-mkt-featured">
           <div className="ag-container">
-            <h2 className="ag-mkt-section-title">Mejor valoradas</h2>
+            <h2 className="ag-mkt-section-title">{t('marketplace.featured')}</h2>
             <div className="ag-featured-grid">
               {featured.map((app, i) => (
                 <Link href={`/marketplace/${app.id}`} key={app.id} className="ag-featured-card">
@@ -148,7 +146,7 @@ export default function MarketplacePage() {
                   <div className="ag-featured-info">
                     <div className="ag-featured-top">
                       <h3>{app.title}</h3>
-                      <span className="ag-featured-price">{formatPrice(app.price, app.currency, app.pricing_type)}</span>
+                      <span className="ag-featured-price">{formatPrice(app.price, app.currency, app.pricing_type, t)}</span>
                     </div>
                     <p className="ag-featured-desc">{app.description}</p>
                     <AppRating rating={app.rating || 0} count={app.rating_count || 0} />
@@ -168,7 +166,7 @@ export default function MarketplacePage() {
               className={`ag-filter-btn ${!selectedCategory ? 'active' : ''}`}
               onClick={() => setSelectedCategory(null)}
             >
-              Todos
+              {t('marketplace.allCategories')}
             </button>
             {categories.map(cat => (
               <button
@@ -176,7 +174,7 @@ export default function MarketplacePage() {
                 className={`ag-filter-btn ${selectedCategory === cat ? 'active' : ''}`}
                 onClick={() => setSelectedCategory(cat)}
               >
-                {categoryLabel(cat)}
+                {getCategoryLabel(cat)}
               </button>
             ))}
           </div>
@@ -188,17 +186,17 @@ export default function MarketplacePage() {
         <div className="ag-container">
           {search && (
             <p className="ag-mkt-search-label">
-              {filteredApps.length} resultado{filteredApps.length !== 1 ? 's' : ''} para <strong>"{search}"</strong>
+              {filteredApps.length} {filteredApps.length === 1 ? t('marketplace.resultLabel') : t('marketplace.resultLabelPlural')} {t('marketplace.for')} <strong>"{search}"</strong>
             </p>
           )}
           {loading ? (
-            <div className="ag-loading">Cargando apps...</div>
+            <div className="ag-loading">{t('marketplace.loading')}</div>
           ) : filteredApps.length === 0 ? (
             <div className="ag-empty">
-              <h2>{search ? 'Sin resultados' : 'No hay apps en esta categoría'}</h2>
-              <p>{search ? 'Probá con otra búsqueda.' : 'Sé el primero en publicar tu app.'}</p>
+              <h2>{search ? t('marketplace.noResults') : t('marketplace.noAppsCategory')}</h2>
+              <p>{search ? t('marketplace.noResultsDesc') : t('marketplace.noAppsCategoryDesc')}</p>
               {!search && (
-                <Link href="/auth" className="ag-btn ag-btn-primary">Publicar app</Link>
+                <Link href="/auth" className="ag-btn ag-btn-primary">{t('nav.publish')}</Link>
               )}
             </div>
           ) : (
@@ -220,13 +218,13 @@ export default function MarketplacePage() {
                       onRate={(r, c) => updateRating(app.id, r, c)}
                     />
                     <div className="ag-app-footer">
-                      <span className="ag-app-category">{categoryLabel(app.category)}</span>
-                      <span className="ag-app-price">{formatPrice(app.price, app.currency, app.pricing_type)}</span>
+                      <span className="ag-app-category">{getCategoryLabel(app.category)}</span>
+                      <span className="ag-app-price">{formatPrice(app.price, app.currency, app.pricing_type, t)}</span>
                     </div>
                   </div>
                   <div className="ag-app-card-actions">
                     <Link href={`/marketplace/${app.id}`} className="ag-btn ag-btn-ghost ag-btn-card">
-                      Ver detalle
+                      {t('marketplace.viewDetail')}
                     </Link>
                     <a
                       href={app.app_url}
@@ -234,7 +232,7 @@ export default function MarketplacePage() {
                       rel="noopener noreferrer"
                       className="ag-btn ag-btn-primary ag-btn-card"
                     >
-                      Ir a la app →
+                      {t('marketplace.goToApp')}
                     </a>
                   </div>
                 </div>
@@ -246,7 +244,7 @@ export default function MarketplacePage() {
 
       <footer className="ag-footer">
         <div className="ag-container">
-          <p>© 2026 AppGrid. Todos los derechos reservados.</p>
+          <p>{t('footer.copyright')}</p>
         </div>
       </footer>
     </main>

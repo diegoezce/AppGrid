@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useLanguage } from '@/app/i18n/useLanguage'
 import { supabase } from '@/lib/supabase'
@@ -9,6 +9,8 @@ import './auth.css'
 
 export default function AuthPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/admin'
   const { t } = useLanguage()
   const [tab, setTab] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
@@ -18,9 +20,9 @@ export default function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) router.replace('/admin')
+      if (data.session) router.replace(redirectTo)
     })
-  }, [router])
+  }, [router, redirectTo])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,7 +34,7 @@ export default function AuthPage() {
       if (error) {
         setMessage({ text: error.message, ok: false })
       } else {
-        router.push('/admin')
+        router.push(redirectTo)
       }
     } else {
       const { error } = await supabase.auth.signUp({ email, password })

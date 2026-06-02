@@ -47,7 +47,7 @@ export default function FeedPage() {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (!session?.user) {
-          router.push('/auth')
+          router.push('/auth?redirect=/feed')
           return
         }
         setCurrentUserId(session.user.id)

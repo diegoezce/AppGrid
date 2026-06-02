@@ -38,10 +38,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return (value as string) || defaultValue
   }
 
-  if (!mounted) {
-    return <>{children}</>
-  }
-
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}

@@ -11,8 +11,8 @@ interface UpdateFeedItemProps {
   likes_count: number
   created_at: string
   liked_by_user?: boolean
-  app: { id: string; title: string; image_url?: string }
-  author: { id: string; display_name: string; username: string; avatar_url?: string }
+  app: { id: string; title: string; image_url?: string } | null
+  author: { id: string; display_name: string; username: string; avatar_url?: string } | null
   currentUserId?: string
 }
 
@@ -75,6 +75,10 @@ export default function UpdateFeedItem({
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (!app || !author) {
+    return null
   }
 
   return (

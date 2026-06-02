@@ -37,8 +37,11 @@ export async function GET(request: NextRequest) {
 
     if (updatesError) throw updatesError
 
+    // Filter out updates with missing app or author (can happen if deleted)
+    const validUpdates = (updates || []).filter(u => u.app && u.author)
+
     // Check which updates the current user has liked
-    const updateIds = (updates || []).map(u => u.id)
+    const updateIds = validUpdates.map(u => u.id)
     let likedSet = new Set<string>()
 
     if (updateIds.length > 0) {
@@ -53,7 +56,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const enriched = (updates || []).map(update => ({
+    const enriched = validUpdates.map(update => ({
       ...update,
       liked_by_user: likedSet.has(update.id)
     }))

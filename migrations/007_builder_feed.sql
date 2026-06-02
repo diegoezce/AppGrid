@@ -16,14 +16,19 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 DO $$
 BEGIN
   IF NOT EXISTS (
-    SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'Users can view own profile'
+    SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'Public read access to builders'
   ) THEN
-    CREATE POLICY "Users can view own profile" ON public.users FOR SELECT USING (auth.uid() = id);
+    CREATE POLICY "Public read access to builders" ON public.users FOR SELECT USING (true);
   END IF;
   IF NOT EXISTS (
     SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'Users can insert own profile'
   ) THEN
     CREATE POLICY "Users can insert own profile" ON public.users FOR INSERT WITH CHECK (auth.uid() = id);
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'Users can update own profile'
+  ) THEN
+    CREATE POLICY "Users can update own profile" ON public.users FOR UPDATE USING (auth.uid() = id);
   END IF;
 END $$;
 

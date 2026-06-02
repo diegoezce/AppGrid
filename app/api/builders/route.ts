@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
 
+    // Get all users from public.users (which should include all auth users via trigger)
     let query = supabase
       .from('users')
       .select('*')
@@ -23,9 +24,13 @@ export async function GET(request: NextRequest) {
     const { data: builders, error } = await query
     if (error) throw error
 
+    if (!builders || builders.length === 0) {
+      return NextResponse.json([])
+    }
+
     // Add app count to each builder
     const enriched = await Promise.all(
-      (builders || []).map(async (builder) => {
+      builders.map(async (builder) => {
         const { count } = await supabase
           .from('apps')
           .select('*', { count: 'exact', head: true })

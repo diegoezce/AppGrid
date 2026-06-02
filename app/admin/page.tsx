@@ -65,6 +65,21 @@ interface Purchase {
   apps: { title: string }
 }
 
+interface AppUpdate {
+  id: string
+  app_id: string
+  title: string
+  content: string
+  likes_count: number
+  created_at: string
+}
+
+const emptyUpdateForm = {
+  app_id: '',
+  title: '',
+  content: '',
+}
+
 export default function AdminPage() {
   const router = useRouter()
   const { t } = useLanguage()
@@ -76,8 +91,12 @@ export default function AdminPage() {
   const [apps, setApps] = useState<App[]>([])
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'form' | 'apps' | 'buyers'>('form')
+  const [activeTab, setActiveTab] = useState<'form' | 'apps' | 'buyers' | 'updates'>('form')
   const [showForm, setShowForm] = useState(true)
+  const [updates, setUpdates] = useState<AppUpdate[]>([])
+  const [updateForm, setUpdateForm] = useState(emptyUpdateForm)
+  const [updateLoading, setUpdateLoading] = useState(false)
+  const [updateMessage, setUpdateMessage] = useState('')
 
   const getCategoryLabel = (cat: string): string => {
     return t(`categories.${cat}`, cat.charAt(0).toUpperCase() + cat.slice(1))
@@ -105,6 +124,7 @@ export default function AdminPage() {
     if (user) {
       fetchApps()
       fetchPurchases()
+      fetchUpdates()
     }
   }, [user])
 
@@ -125,6 +145,63 @@ export default function AdminPage() {
       if (response.ok) setPurchases(await response.json())
     } catch (error) {
       console.error('Error fetching purchases:', error)
+    }
+  }
+
+  const fetchUpdates = async () => {
+    if (!user) return
+    try {
+      const response = await fetch(`/api/updates?user_id=${user.id}`)
+      if (response.ok) setUpdates(await response.json())
+    } catch (error) {
+      console.error('Error fetching updates:', error)
+    }
+  }
+
+  const handleUpdateFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    setUpdateForm(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleUpdateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setUpdateLoading(true)
+    setUpdateMessage('')
+
+    try {
+      const response = await fetch('/api/updates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateForm),
+      })
+
+      if (response.ok) {
+        setUpdateMessage('✅ Update published!')
+        setUpdateForm(emptyUpdateForm)
+        fetchUpdates()
+        setTimeout(() => setUpdateMessage(''), 3000)
+      } else {
+        const data = await response.json()
+        setUpdateMessage(`❌ ${data.error || 'Error publishing update'}`)
+      }
+    } catch {
+      setUpdateMessage('❌ Connection error')
+    } finally {
+      setUpdateLoading(false)
+    }
+  }
+
+  const handleDeleteUpdate = async (id: string) => {
+    if (!confirm('Delete this update?')) return
+    try {
+      const response = await fetch(`/api/updates?id=${id}`, { method: 'DELETE' })
+      if (response.ok) {
+        fetchUpdates()
+      }
+    } catch (error) {
+      console.error('Error deleting update:', error)
     }
   }
 
@@ -265,6 +342,12 @@ export default function AdminPage() {
             {t('admin.buyers')} {purchases.filter(p => p.status === 'pending').length > 0 && (
               <span className="ag-tab-badge">{purchases.filter(p => p.status === 'pending').length}</span>
             )}
+          </button>
+          <button
+            className={`ag-tab ${activeTab === 'updates' ? 'active' : ''}`}
+            onClick={() => setActiveTab('updates')}
+          >
+            Updates ({updates.length})
           </button>
         </div>
 
@@ -490,6 +573,131 @@ export default function AdminPage() {
                   ))}
                 </tbody>
               </table>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'updates' && (
+          <div className="ag-updates-admin">
+            <form onSubmit={handleUpdateSubmit} className="ag-admin-form" style={{ marginBottom: '2rem' }}>
+              <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', fontWeight: 600 }}>
+                New Update
+              </h3>
+
+              <div className="ag-form-group">
+                <label htmlFor="update_app_id">App *</label>
+                {apps.length === 0 ? (
+                  <p style={{ color: 'var(--ag-ink-3)', fontSize: '0.9rem' }}>
+                    You need to publish an app first.
+                  </p>
+                ) : (
+                  <select
+                    id="update_app_id"
+                    name="app_id"
+                    value={updateForm.app_id}
+                    onChange={handleUpdateFormChange}
+                    className="ag-select"
+                    required
+                  >
+                    <option value="">Select an app...</option>
+                    {apps.map(app => (
+                      <option key={app.id} value={app.id}>{app.title}</option>
+                    ))}
+                  </select>
+                )}
+              </div>
+
+              <div className="ag-form-group">
+                <label htmlFor="update_title">Title *</label>
+                <input
+                  id="update_title"
+                  type="text"
+                  name="title"
+                  placeholder="e.g. Added recurring appointments"
+                  value={updateForm.title}
+                  onChange={handleUpdateFormChange}
+                  className="ag-input"
+                  required
+                />
+              </div>
+
+              <div className="ag-form-group">
+                <label htmlFor="update_content">Content *</label>
+                <textarea
+                  id="update_content"
+                  name="content"
+                  placeholder="Describe what you shipped..."
+                  value={updateForm.content}
+                  onChange={handleUpdateFormChange}
+                  className="ag-textarea"
+                  rows={4}
+                  required
+                />
+              </div>
+
+              {updateMessage && (
+                <p className={`ag-message ${updateMessage.startsWith('✅') ? 'success' : 'error'}`}>
+                  {updateMessage}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="ag-btn ag-btn-primary"
+                style={{ width: '100%', padding: '1rem' }}
+                disabled={updateLoading || apps.length === 0}
+              >
+                {updateLoading ? 'Publishing...' : 'Publish Update'}
+              </button>
+            </form>
+
+            {updates.length > 0 && (
+              <div>
+                <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', fontWeight: 600 }}>
+                  Your Updates
+                </h3>
+                <table className="ag-table">
+                  <thead>
+                    <tr>
+                      <th>Update</th>
+                      <th>App</th>
+                      <th>Date</th>
+                      <th>Likes</th>
+                      <th>{t('admin.action')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {updates.map(update => {
+                      const app = apps.find(a => a.id === update.app_id)
+                      return (
+                        <tr key={update.id}>
+                          <td>
+                            <strong>{update.title}</strong><br />
+                            <small>{update.content.substring(0, 60)}{update.content.length > 60 ? '...' : ''}</small>
+                          </td>
+                          <td>{app?.title || '—'}</td>
+                          <td><small>{new Date(update.created_at).toLocaleDateString('en-US')}</small></td>
+                          <td>{update.likes_count}</td>
+                          <td className="ag-table-actions">
+                            <button
+                              className="ag-btn-sm ag-btn-delete"
+                              onClick={() => handleDeleteUpdate(update.id)}
+                            >
+                              {t('admin.delete')}
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {updates.length === 0 && (
+              <div className="ag-empty-state">
+                <p>No updates yet. Share what you've been building!</p>
+              </div>
             )}
           </div>
         )}

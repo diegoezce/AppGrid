@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useLanguage } from '@/app/i18n/useLanguage'
-import LanguageToggle from '@/app/components/LanguageToggle'
+import Navigation from '@/app/components/Navigation'
 
 interface ClientHomeProps {
   appCount: number
@@ -13,27 +13,7 @@ export default function ClientHome({ appCount }: ClientHomeProps) {
 
   return (
     <>
-      {/* Nav */}
-      <nav className="ag-nav">
-        <div className="ag-container ag-nav-inner">
-          <a href="/" className="ag-logo">
-            <span className="ag-logo-mark" aria-hidden="true">
-              <span /><span /><span /><span />
-            </span>
-            <span className="ag-logo-word">AppGrid</span>
-          </a>
-          <div className="ag-nav-links">
-            <Link href="#como">{t('nav.howWorks')}</Link>
-            <Link href="/marketplace">{t('nav.marketplace')}</Link>
-          </div>
-          <div className="ag-nav-actions">
-            <LanguageToggle />
-            <Link href="/auth" className="ag-btn ag-btn-primary ag-btn-sm">
-              {t('nav.publish')}
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero */}
       <section className="ag-hero">

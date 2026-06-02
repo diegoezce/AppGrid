@@ -1,7 +1,33 @@
 -- Builder Feed MVP Migration
 -- Adds tables and fields for follows, application updates, and likes
 
--- 1. Extend users table with profile fields
+-- 1. Ensure users table exists (mirrors 001_init.sql; safe to re-run with IF NOT EXISTS)
+CREATE TABLE IF NOT EXISTS public.users (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL UNIQUE,
+  full_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'Users can view own profile'
+  ) THEN
+    CREATE POLICY "Users can view own profile" ON public.users FOR SELECT USING (auth.uid() = id);
+  END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'users' AND policyname = 'Users can insert own profile'
+  ) THEN
+    CREATE POLICY "Users can insert own profile" ON public.users FOR INSERT WITH CHECK (auth.uid() = id);
+  END IF;
+END $$;
+
+-- 2. Extend users table with Builder Feed profile fields
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS display_name TEXT;
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS bio TEXT;

@@ -3,7 +3,10 @@
     "howWorks": "How it works",
     "marketplace": "Marketplace",
     "publish": "Publish app",
-    "admin": "Admin"
+    "admin": "Admin",
+    "feed": "Feed",
+    "explore": "Explore",
+    "profile": "Profile"
   },
   "hero": {
     "eyebrow": "Marketplace for devs · LATAM + Spain",

@@ -2,13 +2,11 @@
 -- Adds tables and fields for follows, application updates, and likes
 
 -- 1. Extend users table with profile fields
-ALTER TABLE public.users ADD COLUMN IF NOT EXISTS (
-  username TEXT UNIQUE,
-  display_name TEXT,
-  bio TEXT,
-  followers_count INTEGER DEFAULT 0,
-  following_count INTEGER DEFAULT 0
-);
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS display_name TEXT;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS followers_count INTEGER DEFAULT 0;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS following_count INTEGER DEFAULT 0;
 
 -- 2. Create follows table
 CREATE TABLE IF NOT EXISTS public.follows (

@@ -12,7 +12,11 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('application_updates')
-      .select('*')
+      .select(`
+        *,
+        app:app_id (id, title, image_url),
+        author:author_id (id, email, display_name, avatar_url, username)
+      `)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -22,7 +26,10 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
     if (error) throw error
 
-    return NextResponse.json(data || [])
+    // Filter out updates with missing app or author
+    const validUpdates = (data || []).filter(u => u.app && u.author)
+
+    return NextResponse.json(validUpdates)
   } catch (error) {
     console.error('Get updates error:', error)
     return NextResponse.json({ error: 'Failed to fetch updates' }, { status: 500 })

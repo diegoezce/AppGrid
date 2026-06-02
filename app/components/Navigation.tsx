@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import LanguageToggle from './LanguageToggle'
 import { useLanguage } from '@/app/i18n/useLanguage'
+import './navigation.css'
 
 export default function Navigation() {
   const { t } = useLanguage()

@@ -20,13 +20,10 @@ export async function GET(request: NextRequest) {
 
     if (followsError) throw followsError
 
-    if (!follows || follows.length === 0) {
-      return NextResponse.json([])
-    }
+    // Include the user's own updates + followed builders' updates
+    const authorIds = [...new Set([user_id, ...(follows || []).map(f => f.following_id)])]
 
-    const followedIds = follows.map(f => f.following_id)
-
-    // Get updates from followed builders with app and author info
+    // Get updates from followed builders + own updates with app and author info
     const { data: updates, error: updatesError } = await supabase
       .from('application_updates')
       .select(`
@@ -34,7 +31,7 @@ export async function GET(request: NextRequest) {
         app:app_id (id, title, image_url),
         author:author_id (id, email, display_name, avatar_url, username)
       `)
-      .in('author_id', followedIds)
+      .in('author_id', authorIds)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 

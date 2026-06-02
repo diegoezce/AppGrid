@@ -4,6 +4,13 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+interface Comment {
+  id: string
+  content: string
+  created_at: string
+  user: { id: string; display_name: string; username: string; avatar_url?: string }
+}
+
 interface UpdateFeedItemProps {
   id: string
   title: string
@@ -42,7 +49,16 @@ export default function UpdateFeedItem({
 }: UpdateFeedItemProps) {
   const [isLiked, setIsLiked] = useState(liked_by_user)
   const [likesCount, setLikesCount] = useState(likes_count)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLikeLoading, setIsLikeLoading] = useState(false)
+
+  const [showComments, setShowComments] = useState(false)
+  const [comments, setComments] = useState<Comment[]>([])
+  const [commentsLoaded, setCommentsLoaded] = useState(false)
+  const [commentsLoading, setCommentsLoading] = useState(false)
+  const [commentText, setCommentText] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [commentError, setCommentError] = useState<string | null>(null)
+
   const router = useRouter()
 
   const handleToggleLike = async () => {
@@ -51,7 +67,7 @@ export default function UpdateFeedItem({
       return
     }
 
-    setIsLoading(true)
+    setIsLikeLoading(true)
     try {
       if (isLiked) {
         const response = await fetch(`/api/updates/${id}/like?user_id=${currentUserId}`, {
@@ -73,13 +89,71 @@ export default function UpdateFeedItem({
     } catch (error) {
       console.error('Toggle like error:', error)
     } finally {
-      setIsLoading(false)
+      setIsLikeLoading(false)
     }
   }
 
-  if (!app || !author) {
-    return null
+  const handleToggleComments = async () => {
+    if (!showComments && !commentsLoaded) {
+      setCommentsLoading(true)
+      try {
+        const res = await fetch(`/api/updates/${id}/comments`)
+        if (!res.ok) throw new Error('Failed to fetch comments')
+        setComments(await res.json())
+        setCommentsLoaded(true)
+      } catch (error) {
+        console.error('Fetch comments error:', error)
+      } finally {
+        setCommentsLoading(false)
+      }
+    }
+    setShowComments(prev => !prev)
   }
+
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!currentUserId) {
+      router.push('/auth')
+      return
+    }
+    if (!commentText.trim()) return
+
+    setIsSubmitting(true)
+    setCommentError(null)
+    try {
+      const res = await fetch(`/api/updates/${id}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: currentUserId, content: commentText })
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setCommentError(data.error ?? 'Failed to post comment')
+        return
+      }
+      setComments(prev => [...prev, data])
+      setCommentText('')
+    } catch (error) {
+      console.error('Post comment error:', error)
+      setCommentError('Failed to post comment')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      const res = await fetch(`/api/updates/${id}/comments?comment_id=${commentId}&user_id=${currentUserId}`, {
+        method: 'DELETE'
+      })
+      if (!res.ok) throw new Error('Failed to delete comment')
+      setComments(prev => prev.filter(c => c.id !== commentId))
+    } catch (error) {
+      console.error('Delete comment error:', error)
+    }
+  }
+
+  if (!app || !author) return null
 
   return (
     <article className="ag-feed-item">
@@ -107,13 +181,87 @@ export default function UpdateFeedItem({
       <div className="ag-feed-item-footer">
         <button
           onClick={handleToggleLike}
-          disabled={isLoading}
+          disabled={isLikeLoading}
           className={`ag-like-button ${isLiked ? 'liked' : ''}`}
         >
           <span className="ag-like-icon">{isLiked ? '❤️' : '🤍'}</span>
           <span className="ag-like-count">{likesCount}</span>
         </button>
+
+        <button
+          onClick={handleToggleComments}
+          className={`ag-comment-button ${showComments ? 'active' : ''}`}
+        >
+          <span>💬</span>
+          <span>{comments.length > 0 ? comments.length : ''}</span>
+        </button>
       </div>
+
+      {showComments && (
+        <div className="ag-comments-section">
+          {commentsLoading ? (
+            <p className="ag-comments-loading">Loading...</p>
+          ) : (
+            <>
+              {comments.length === 0 && (
+                <p className="ag-comments-empty">No comments yet. Be the first!</p>
+              )}
+              <div className="ag-comments-list">
+                {comments.map(comment => (
+                  <div key={comment.id} className="ag-comment">
+                    <Link href={`/builders/${comment.user.username}`} className="ag-comment-author">
+                      {comment.user.avatar_url && (
+                        <img src={comment.user.avatar_url} alt={comment.user.display_name} className="ag-comment-avatar" />
+                      )}
+                      <span className="ag-comment-name">{comment.user.display_name}</span>
+                    </Link>
+                    <p className="ag-comment-content">{comment.content}</p>
+                    <div className="ag-comment-meta">
+                      <span className="ag-comment-time">{formatTime(comment.created_at)}</span>
+                      {currentUserId === comment.user.id && (
+                        <button
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="ag-comment-delete"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {currentUserId ? (
+                {commentError && (
+                  <p className="ag-comment-error">{commentError}</p>
+                )}
+              <form onSubmit={handleSubmitComment} className="ag-comment-form">
+                  <input
+                    type="text"
+                    value={commentText}
+                    onChange={e => setCommentText(e.target.value)}
+                    placeholder="Write a comment..."
+                    maxLength={500}
+                    className="ag-comment-input"
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || !commentText.trim()}
+                    className="ag-comment-submit"
+                  >
+                    {isSubmitting ? '...' : 'Send'}
+                  </button>
+                </form>
+              ) : (
+                <p className="ag-comments-login">
+                  <Link href="/auth">Log in</Link> to comment
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </article>
   )
 }

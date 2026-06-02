@@ -110,6 +110,7 @@
     gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: flex-end;
+    order: 2;
   }
 
   .ag-nav-actions a.ag-btn {

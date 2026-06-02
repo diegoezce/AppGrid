@@ -390,6 +390,7 @@
     flex-direction: column;
     gap: 1rem;
     font-size: 0.8rem;
+    align-items: center;
   }
 
   .ag-stat-sep {
@@ -478,10 +479,15 @@
     gap: 0.75rem;
     margin-top: 0.75rem;
     font-size: 0.75rem;
+    align-items: center;
   }
 
   .ag-stat strong {
     font-size: 1rem;
+  }
+
+  .ag-stat-sep {
+    display: none;
   }
 
   .ag-section {

@@ -108,6 +108,33 @@
     "submitSignup": "Crear cuenta",
     "confirmEmail": "Revisá tu email para confirmar la cuenta."
   },
+  "success": {
+    "failed": "Algo salió mal",
+    "failedMessage": "El pago no se completó. Podés intentarlo de nuevo desde el marketplace.",
+    "backMarketplace": "Volver al marketplace",
+    "paymentReceived": "¡Pago recibido!",
+    "paymentReceivedMessage": "Tu compra fue procesada correctamente. El desarrollador revisará el pago y se pondrá en contacto con vos a la brevedad con los detalles de acceso.",
+    "step1": "El dev confirma el pago en MercadoPago",
+    "step2": "Te envía las credenciales de acceso por email",
+    "step3": "Empezás a usar la app",
+    "exploreApps": "Explorar más apps"
+  },
+  "appDetail": {
+    "backMarketplace": "← Marketplace",
+    "free": "Gratis",
+    "goToApp": "Ir a la app →",
+    "tryApp": "Probar la app",
+    "buyAccess": "Comprar acceso →",
+    "aboutApp": "Sobre esta app",
+    "buyTitle": "Comprar",
+    "checkoutMessage": "Dejá tu email y te redirigimos al pago. El dev te dará acceso una vez confirmado.",
+    "emailPlaceholder": "tu@email.com",
+    "loading": "Un momento...",
+    "goToPayment": "Ir al pago ·",
+    "paymentStarted": "¡Pago iniciado!",
+    "paymentMessage": "Completá el pago en la ventana que se abrió. Una vez confirmado, el dev te enviará el acceso a",
+    "close": "Cerrar"
+  },
   "admin": {
     "title": "Panel de Admin",
     "loading": "Cargando...",

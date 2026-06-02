@@ -108,6 +108,33 @@
     "submitSignup": "Create account",
     "confirmEmail": "Check your email to confirm your account."
   },
+  "success": {
+    "failed": "Something went wrong",
+    "failedMessage": "The payment was not completed. You can try again from the marketplace.",
+    "backMarketplace": "Back to marketplace",
+    "paymentReceived": "Payment received!",
+    "paymentReceivedMessage": "Your purchase has been processed successfully. The developer will review the payment and will contact you shortly with the access details.",
+    "step1": "Developer confirms payment in MercadoPago",
+    "step2": "Sends you access credentials by email",
+    "step3": "Start using the app",
+    "exploreApps": "Explore more apps"
+  },
+  "appDetail": {
+    "backMarketplace": "← Marketplace",
+    "free": "Free",
+    "goToApp": "Go to app →",
+    "tryApp": "Try app",
+    "buyAccess": "Buy access →",
+    "aboutApp": "About this app",
+    "buyTitle": "Buy",
+    "checkoutMessage": "Enter your email and we'll redirect you to payment. The developer will give you access once confirmed.",
+    "emailPlaceholder": "you@email.com",
+    "loading": "One moment...",
+    "goToPayment": "Go to payment ·",
+    "paymentStarted": "Payment started!",
+    "paymentMessage": "Complete the payment in the window that opened. Once confirmed, the developer will send you access to",
+    "close": "Close"
+  },
   "admin": {
     "title": "Admin Panel",
     "loading": "Loading...",

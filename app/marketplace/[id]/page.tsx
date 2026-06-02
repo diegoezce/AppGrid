@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/app/i18n/useLanguage'
+import LanguageToggle from '@/app/components/LanguageToggle'
 import AppRating from '@/app/components/AppRating'
 import './app-detail.css'
 
@@ -45,6 +47,7 @@ interface App {
 export default function AppDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
+  const { t } = useLanguage()
   const [app, setApp] = useState<App | null>(null)
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
@@ -108,8 +111,9 @@ export default function AppDetailPage() {
             <span className="ag-logo-word">AppGrid</span>
           </Link>
           <div className="ag-nav-actions">
+            <LanguageToggle />
             <Link href="/marketplace" className="ag-btn ag-btn-ghost ag-btn-sm">
-              ← Marketplace
+              {t('appDetail.backMarketplace')}
             </Link>
           </div>
         </div>
@@ -142,7 +146,7 @@ export default function AppDetailPage() {
           <div className="ag-detail-cta">
             <div className="ag-detail-price">
               {isFree
-                ? <span className="ag-price-free">Gratis</span>
+                ? <span className="ag-price-free">{t('appDetail.free')}</span>
                 : <span className="ag-price-paid">
                     ${app.price} <small>{currency}{periodLabel}</small>
                   </span>
@@ -155,7 +159,7 @@ export default function AppDetailPage() {
                 rel="noopener noreferrer"
                 className="ag-btn ag-btn-primary ag-btn-lg ag-detail-btn"
               >
-                Ir a la app →
+                {t('appDetail.goToApp')}
               </a>
             ) : (
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -166,7 +170,7 @@ export default function AppDetailPage() {
                   className="ag-btn ag-btn-ghost ag-btn-lg ag-detail-btn"
                   style={{ flex: 1, minWidth: '150px' }}
                 >
-                  Probar la app
+                  {t('appDetail.tryApp')}
                 </a>
                 {app.payment_url && (
                   <button
@@ -174,7 +178,7 @@ export default function AppDetailPage() {
                     onClick={() => setModalOpen(true)}
                     style={{ flex: 1, minWidth: '150px' }}
                   >
-                    Comprar acceso →
+                    {t('appDetail.buyAccess')}
                   </button>
                 )}
               </div>
@@ -185,7 +189,7 @@ export default function AppDetailPage() {
         <hr className="ag-detail-divider" />
 
         <div className="ag-detail-body">
-          <h2 className="ag-detail-section-title">Sobre esta app</h2>
+          <h2 className="ag-detail-section-title">{t('appDetail.aboutApp')}</h2>
           <div
             className="ag-detail-description"
             dangerouslySetInnerHTML={{ __html: parseMarkdown(app.description) }}
@@ -208,15 +212,15 @@ export default function AppDetailPage() {
 
             {step === 'form' ? (
               <>
-                <h2 className="ag-modal-title">Comprar {app.title}</h2>
+                <h2 className="ag-modal-title">{t('appDetail.buyTitle')} {app.title}</h2>
                 <p className="ag-modal-sub">
-                  Dejá tu email y te redirigimos al pago. El dev te dará acceso una vez confirmado.
+                  {t('appDetail.checkoutMessage')}
                 </p>
                 <form onSubmit={handleBuy} className="ag-modal-form">
                   <input
                     type="email"
                     className="ag-input"
-                    placeholder="tu@email.com"
+                    placeholder={t('appDetail.emailPlaceholder')}
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
@@ -228,19 +232,19 @@ export default function AppDetailPage() {
                     style={{ width: '100%', justifyContent: 'center', padding: '0.875rem' }}
                     disabled={submitting}
                   >
-                    {submitting ? 'Un momento...' : `Ir al pago · $${app.price} ${currency}${periodLabel} →`}
+                    {submitting ? t('appDetail.loading') : `${t('appDetail.goToPayment')} $${app.price} ${currency}${periodLabel} →`}
                   </button>
                 </form>
               </>
             ) : (
               <div className="ag-modal-success">
                 <div className="ag-modal-check">✓</div>
-                <h2 className="ag-modal-title">¡Pago iniciado!</h2>
+                <h2 className="ag-modal-title">{t('appDetail.paymentStarted')}</h2>
                 <p className="ag-modal-sub">
-                  Completá el pago en la ventana que se abrió. Una vez confirmado, el dev te enviará el acceso a <strong>{email}</strong>.
+                  {t('appDetail.paymentMessage')} <strong>{email}</strong>.
                 </p>
                 <button className="ag-btn ag-btn-ghost" style={{ width: '100%', justifyContent: 'center' }} onClick={closeModal}>
-                  Cerrar
+                  {t('appDetail.close')}
                 </button>
               </div>
             )}

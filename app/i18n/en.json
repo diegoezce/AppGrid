@@ -25,6 +25,7 @@
     "following": "Following",
     "apps": "Apps"
   },
+  "howWorks": {
     "title": "How it works",
     "subtitle": "In three steps your app generates income.",
     "step1": "You publish your app",

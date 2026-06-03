@@ -20,9 +20,11 @@
   "stats": {
     "appsPublished": "apps published",
     "region": "LATAM + Spain",
-    "freePricing": "publish today"
+    "freePricing": "publish today",
+    "followers": "Followers",
+    "following": "Following",
+    "apps": "Apps"
   },
-  "howWorks": {
     "title": "How it works",
     "subtitle": "In three steps your app generates income.",
     "step1": "You publish your app",
@@ -168,11 +170,6 @@
     "follow": "Follow",
     "unfollow": "Unfollow",
     "loading": "Loading..."
-  },
-  "stats": {
-    "followers": "Followers",
-    "following": "Following",
-    "apps": "Apps"
   },
   "comments": {
     "loading": "Loading...",

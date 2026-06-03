@@ -200,11 +200,10 @@
 .ag-marketplace-filters {
   background: white;
   border-bottom: 1px solid var(--ag-line);
-  padding: 1.5rem 0;
+  padding: 1rem 0;
   position: sticky;
   top: 64px;
   z-index: 40;
-  will-change: auto;
 }
 
 .ag-marketplace-filters .ag-container {
@@ -414,6 +413,10 @@
 @media (max-width: 768px) {
   .ag-apps-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ag-marketplace-filters {
+    top: 104px;
   }
 
   .ag-marketplace-filters .ag-container {

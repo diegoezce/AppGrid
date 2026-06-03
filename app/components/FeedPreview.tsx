@@ -49,7 +49,7 @@ export default function FeedPreview() {
             <h2 className="ag-h2">{t('landing.feedTitle')}</h2>
             <p className="ag-section-sub">{t('landing.feedSubtitle')}</p>
           </div>
-          <Link href="/auth" className="ag-btn ag-btn-ghost ag-btn-sm ag-feed-preview-cta-desktop">
+          <Link href="/feed" className="ag-btn ag-btn-ghost ag-btn-sm ag-feed-preview-cta-desktop">
             {t('landing.feedCta')} →
           </Link>
         </div>
@@ -77,7 +77,7 @@ export default function FeedPreview() {
         </div>
 
         <div className="ag-feed-preview-cta-mobile">
-          <Link href="/auth" className="ag-btn ag-btn-ghost ag-btn-sm">
+          <Link href="/feed" className="ag-btn ag-btn-ghost ag-btn-sm">
             {t('landing.feedCta')} →
           </Link>
         </div>

@@ -9,28 +9,31 @@
 
 .ag-admin-container {
   min-height: 100vh;
-  background: var(--ag-bg);
-  padding: 2rem;
+  background: white;
+  padding: 2.5rem 2rem;
 }
 
 .ag-admin-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1000px;
-  margin: 0 auto 3rem;
-  padding-bottom: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--ag-line);
 }
 
 .ag-admin-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
 }
 
 .ag-admin-header p {
   color: var(--ag-ink-3);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .ag-admin-header a {
@@ -44,26 +47,30 @@
 }
 
 .ag-admin-content {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .ag-admin-tabs {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   border-bottom: 1px solid var(--ag-line);
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ag-tab {
-  padding: 1rem 1.5rem;
+  padding: 0.875rem 1.25rem;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
   color: var(--ag-ink-3);
   font-weight: 500;
+  font-size: 0.95rem;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .ag-tab:hover {
@@ -71,8 +78,9 @@
 }
 
 .ag-tab.active {
-  color: var(--ag-ink);
+  color: var(--ag-accent);
   border-bottom-color: var(--ag-accent);
+  font-weight: 600;
 }
 
 .ag-tab-badge {
@@ -136,34 +144,50 @@
 .ag-admin-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  background: white;
-  padding: 2rem;
-  border: 1px solid var(--ag-line);
-  border-radius: var(--ag-radius);
+  gap: 1.75rem;
 }
 
 .ag-form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.625rem;
 }
 
 .ag-form-group label {
-  font-weight: 500;
-  font-size: 0.9rem;
-  color: var(--ag-ink-2);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ag-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .ag-form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.75rem;
+}
+
+.ag-admin-form .ag-input,
+.ag-admin-form .ag-textarea,
+.ag-admin-form .ag-select {
+  border: 1px solid var(--ag-line);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.ag-admin-form .ag-input:focus,
+.ag-admin-form .ag-textarea:focus,
+.ag-admin-form .ag-select:focus {
+  outline: none;
+  border-color: var(--ag-accent);
+  box-shadow: 0 0 0 3px rgba(198, 242, 78, 0.1);
 }
 
 .ag-message {
-  padding: 1rem;
-  border-radius: var(--ag-radius-sm);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
   font-weight: 500;
   text-align: center;
 }
@@ -180,20 +204,20 @@
 
 .ag-apps-list {
   background: white;
-  border: 1px solid var(--ag-line);
-  border-radius: var(--ag-radius);
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .ag-empty-state {
-  padding: 3rem;
+  padding: 3.5rem 2rem;
   text-align: center;
   color: var(--ag-ink-3);
 }
 
 .ag-empty-state p {
   margin-bottom: 1.5rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .ag-table {
@@ -202,51 +226,54 @@
 }
 
 .ag-table thead {
-  background: var(--ag-line-2);
-  border-bottom: 1px solid var(--ag-line);
+  background: var(--ag-bg);
+  border-bottom: 2px solid var(--ag-line);
 }
 
 .ag-table th {
-  padding: 1rem;
+  padding: 1.125rem 1.5rem;
   text-align: left;
-  font-weight: 600;
-  color: var(--ag-ink-2);
-  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ag-ink);
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .ag-table td {
-  padding: 1rem;
-  border-bottom: 1px solid var(--ag-line-2);
+  padding: 1.125rem 1.5rem;
+  border-bottom: 1px solid var(--ag-line);
   color: var(--ag-ink);
 }
 
 .ag-table tbody tr:hover {
-  background: var(--ag-line-2);
+  background: var(--ag-bg);
 }
 
 .ag-table small {
   color: var(--ag-ink-3);
   display: block;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .ag-table-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   white-space: nowrap;
 }
 
 .ag-btn-sm {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.8rem;
   border: 1px solid var(--ag-line);
-  border-radius: var(--ag-radius-sm);
+  border-radius: 6px;
   background: white;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .ag-btn-edit {
@@ -255,18 +282,32 @@
 }
 
 .ag-btn-edit:hover {
-  background: #E8F5E9;
-  border-color: #81C784;
+  background: #F0F9FF;
+  border-color: var(--ag-accent);
+  color: var(--ag-accent);
 }
 
 .ag-btn-delete {
-  color: #D32F2F;
-  border-color: #FFCDD2;
+  color: #EF4444;
+  border-color: #FCA5A5;
 }
 
 .ag-btn-delete:hover {
-  background: #FFEBEE;
-  border-color: #D32F2F;
+  background: #FEF2F2;
+  border-color: #EF4444;
+}
+
+.ag-updates-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ag-updates-admin h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ag-ink);
 }
 
 .ag-detail-description h1,
@@ -317,32 +358,43 @@
 }
 
 @media (max-width: 768px) {
+  .ag-admin-container {
+    padding: 2rem 1.5rem;
+  }
+
   .ag-admin-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .ag-admin-header h1 {
+    font-size: 1.5rem;
   }
 
   .ag-form-row {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .ag-admin-form {
-    padding: 1.5rem;
+    gap: 1.5rem;
   }
 
   .ag-apps-list {
     overflow-x: auto;
+    border-radius: 6px;
   }
 
   .ag-table {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     min-width: 500px;
   }
 
   .ag-table th,
   .ag-table td {
-    padding: 0.75rem;
+    padding: 0.875rem 1rem;
     white-space: nowrap;
   }
 
@@ -357,14 +409,14 @@
   }
 
   .ag-btn-sm {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
   }
 
   .ag-admin-tabs {
     gap: 0;
-    margin-left: -2rem;
-    margin-right: -2rem;
-    padding: 0 2rem;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding: 0 1.5rem;
   }
 }

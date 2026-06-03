@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/app/i18n/useLanguage'
 import Navigation from '@/app/components/Navigation'
@@ -67,7 +67,10 @@ export default function MarketplacePage() {
     return t(`categories.${cat}`, cat.charAt(0).toUpperCase() + cat.slice(1))
   }
 
-  const categories = Array.from(new Set(apps.map(app => app.category)))
+  const categories = useMemo(() =>
+    Array.from(new Set(apps.map(app => app.category))),
+    [apps]
+  )
 
   const featured = [...apps]
     .filter(a => a.rating > 0)

@@ -20,7 +20,10 @@
   "stats": {
     "appsPublished": "apps published",
     "region": "LATAM + Spain",
-    "freePricing": "publish today"
+    "freePricing": "publish today",
+    "followers": "Followers",
+    "following": "Following",
+    "apps": "Apps"
   },
   "howWorks": {
     "title": "How it works",
@@ -168,11 +171,6 @@
     "follow": "Follow",
     "unfollow": "Unfollow",
     "loading": "Loading..."
-  },
-  "stats": {
-    "followers": "Followers",
-    "following": "Following",
-    "apps": "Apps"
   },
   "comments": {
     "loading": "Loading...",

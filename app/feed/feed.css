@@ -361,6 +361,8 @@
   .ag-feed-item {
     border-radius: 0;
     padding: 1rem;
+    margin-bottom: 0;
+    gap: 0.75rem;
   }
 
   .ag-feed-header {
@@ -370,5 +372,135 @@
 
   .ag-feed-header h1 {
     font-size: 1.5rem;
+  }
+
+  .ag-feed-item-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .ag-feed-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ag-update-title {
+    font-size: 0.95rem;
+  }
+
+  .ag-comment-form {
+    gap: 0.375rem;
+  }
+
+  .ag-comment-submit {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ag-feed-container {
+    margin: 0.5rem 0;
+  }
+
+  .ag-feed-item {
+    padding: 0.75rem;
+  }
+
+  .ag-feed-header {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ag-feed-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .ag-feed-header p {
+    font-size: 0.85rem;
+  }
+
+  .ag-author-info {
+    gap: 0.5rem;
+  }
+
+  .ag-feed-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ag-author-name {
+    font-size: 0.8rem;
+  }
+
+  .ag-author-username {
+    font-size: 0.7rem;
+  }
+
+  .ag-feed-timestamp {
+    font-size: 0.7rem;
+  }
+
+  .ag-app-name {
+    font-size: 0.7rem;
+  }
+
+  .ag-update-title {
+    font-size: 0.9rem;
+  }
+
+  .ag-update-content {
+    font-size: 0.8rem;
+  }
+
+  .ag-feed-item-footer {
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .ag-like-button,
+  .ag-comment-button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .ag-action-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .ag-comment-avatar {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .ag-comment-name {
+    font-size: 0.75rem;
+  }
+
+  .ag-comment-content {
+    font-size: 0.8rem;
+    padding-left: 1.4rem;
+  }
+
+  .ag-comment-meta {
+    padding-left: 1.4rem;
+  }
+
+  .ag-comment-input {
+    padding: 0.4rem 0.625rem;
+    font-size: 0.8rem;
+  }
+
+  .ag-empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .ag-empty-state h2 {
+    font-size: 1.25rem;
+  }
+
+  .ag-empty-state p {
+    font-size: 0.9rem;
   }
 }

@@ -11,29 +11,29 @@
   },
   "hero": {
     "eyebrow": "Marketplace for devs · LATAM + Spain",
-    "title": "Turn your apps into ",
-    "titleHighlight": "real income",
-    "description": "AppGrid is the developer community for LATAM and Spain. Connect with clients, collaborate with fellow devs, and publish your apps — all in one place.",
+    "title": "Discover builders.",
+    "titleHighlight": "Discover products.",
+    "description": "The platform where software creators from LATAM and Spain showcase what they're building, share projects, and discover new opportunities.",
     "publishCta": "Publish your app →",
     "exploreCta": "Explore marketplace"
   },
   "stats": {
     "appsPublished": "apps published",
     "region": "LATAM + Spain",
-    "freePricing": "publish today",
+    "freePricing": "Builders",
     "followers": "Followers",
     "following": "Following",
     "apps": "Apps"
   },
   "howWorks": {
     "title": "How it works",
-    "subtitle": "In three steps your app generates income.",
+    "subtitle": "Share what you're building in three steps.",
     "step1": "You publish your app",
     "step1Desc": "Upload your SaaS, script or automation from the admin panel. Price, description, category — done.",
     "step2": "We bring you buyers",
-    "step2Desc": "Your app appears in the marketplace in front of developers and companies from LATAM and Spain looking for solutions.",
+    "step2Desc": "Share your SaaS products, scripts, or automations so others can discover them.",
     "step3": "Get paid directly",
-    "step3Desc": "The buyer pays through your MercadoPago link. You get the money and give them access. No intermediaries."
+    "step3Desc": "Your products appear on AppGrid so builders and potential users can discover your work."
   },
   "features": {
     "title": "Why AppGrid",
@@ -50,10 +50,10 @@
     "subtitle": "AppGrid is growing. Here's what we're building.",
     "item1": "AI-powered distribution",
     "item1Desc": "Tools to get your app to exactly the audience that needs it.",
-    "item2": "App analytics",
-    "item2Desc": "How many visits, where they come from, what converts. All in one dashboard.",
-    "item3": "Built-in payments",
-    "item3Desc": "Process payments directly from AppGrid, without leaving the platform."
+    "item2": "Product analytics",
+    "item2Desc": "Understand which products receive the most visits, interest, and interaction.",
+    "item3": "Builder Spotlight",
+    "item3Desc": "More visibility for builders and standout community projects."
   },
   "finalCta": {
     "title": "Got an app ready?",
@@ -65,8 +65,8 @@
   },
   "marketplace": {
     "eyebrow": "apps available · LATAM + Spain",
-    "title": "Find the perfect",
-    "titleHighlight": "app for your business.",
+    "title": "Explore products",
+    "titleHighlight": "built by builders.",
     "searchPlaceholder": "Search apps...",
     "featured": "Top rated",
     "allCategories": "All",
@@ -144,7 +144,7 @@
   },
   "builders": {
     "title": "Explore Builders",
-    "subtitle": "Discover what other developers are building",
+    "subtitle": "Discover what other builders are building",
     "sortLabel": "Sort by:",
     "mostFollowers": "Followers",
     "mostApps": "Apps published",
@@ -190,7 +190,7 @@
     "feedLive": "Live",
     "feedTitle": "What builders are shipping",
     "feedSubtitle": "Real updates from developers across LATAM and Spain",
-    "feedCta": "See full feed"
+    "feedCta": "Explore builders"
   },
   "composer": {
     "placeholder": "What are you working on?",

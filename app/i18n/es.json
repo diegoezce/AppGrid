@@ -11,49 +11,49 @@
   },
   "hero": {
     "eyebrow": "Builders · Productos · LATAM + España",
-    "title": "Descubrí builders",
-    "titleHighlight": "Descubrí productos",
-    "description": "La plataforma donde los creadores de software de LATAM y España muestran lo que están construyendo, comparten proyectos y conectan con nuevas audiencias.",
+    "title": "Descubrí builders.",
+    "titleHighlight": "Descubrí productos.",
+    "description": "La plataforma donde los creadores de software de LATAM y España muestran lo que están construyendo, comparten proyectos y descubren nuevas oportunidades.",
     "publishCta": "Crear perfil →",
     "exploreCta": "Explorar builders"
     },
   "stats": {
     "appsPublished": "apps publicadas",
     "region": "LATAM + España",
-    "freePricing": "publicar hoy",
+    "freePricing": "Builders",
     "followers": "Seguidores",
     "following": "Siguiendo",
     "apps": "Apps"
   },
   "howWorks": {
     "title": "Cómo funciona",
-    "subtitle": "En tres pasos compartís tu producto con la comunidad.",
+    "subtitle": "En tres pasos compartís lo que construís.",
     "step1": "Creá tu perfil",
     "step1Desc": "Mostrá quién sos, qué construís y agregá tus productos.",
     "step2": "Publicá tus apps",
-    "step2Desc": "Compartí tus SaaS, scripts o automatizaciones con builders y potenciales usuarios.",
+    "step2Desc": "Compartí tus SaaS, scripts o automatizaciones para que otros puedan descubrirlos.",
     "step3": "Ganá visibilidad",
-    "step3Desc": "Tus productos aparecen en AppGrid para que otros puedan descubrirlos, seguir tu trabajo y conocer tus avances."
+    "step3Desc": "Tus productos aparecen en AppGrid para que builders y potenciales usuarios conozcan tu trabajo."
 },
   "features": {
-    "title": "Por qué AppGrid",
-    "subtitle": "Todo lo que necesitás para monetizar tu código.",
-    "feature1": "Setup en minutos",
-    "feature1Desc": "Sin configurar servidores de pagos ni landing pages. Publicás y ya estás vendiendo.",
-    "feature2": "Mercado hispanohablante",
-    "feature2Desc": "Accedé a millones de desarrolladores y empresas en España, Argentina, México, Colombia y más.",
-    "feature3": "Vos fijás el precio",
-    "feature3Desc": "Precio único, suscripción mensual, o lo que mejor funcione para tu producto. Sin restricciones."
-  },
+  "title": "Por qué AppGrid",
+  "subtitle": "Todo lo que necesitás para mostrar y compartir lo que construís.",
+  "feature1": "Perfil de Builder",
+  "feature1Desc": "Creá tu perfil público, mostrá tus productos y construí tu presencia dentro de la comunidad.",
+  "feature2": "Descubrimiento",
+  "feature2Desc": "Explorá builders y productos creados en LATAM y España, y encontrá inspiración para tus próximos proyectos.",
+  "feature3": "Compartí avances",
+  "feature3Desc": "Publicá actualizaciones sobre tus apps, lanzamientos y nuevas funcionalidades para que otros sigan tu trabajo."
+},
   "roadmap": {
     "title": "Lo que viene",
     "subtitle": "AppGrid está creciendo. Esto es lo que estamos construyendo.",
     "item1": "Distribución con IA",
     "item1Desc": "Herramientas para que tu app llegue exactamente a la audiencia que la necesita.",
-    "item2": "Analytics de tu app",
-    "item2Desc": "Cuántas visitas, de dónde vienen, qué convierte. Todo en un dashboard.",
-    "item3": "Pagos integrados",
-    "item3Desc": "Procesá cobros directamente desde AppGrid, sin salir de la plataforma."
+    "item2": "Analytics de productos",
+    "item2Desc": "Entendé qué productos reciben más visitas, interés e interacción.",
+    "item3": "Builder Spotlight",
+    "item3Desc": "Más visibilidad para builders y proyectos destacados de la comunidad."
   },
   "finalCta": {
     "title": "¿Tenés una app lista?",
@@ -65,8 +65,8 @@
   },
   "marketplace": {
     "eyebrow": "apps disponibles · LATAM + España",
-    "title": "Encontrá la app",
-    "titleHighlight": "perfecta para tu negocio.",
+    "title": "Explorá productos",
+    "titleHighlight": "creados por builders.",
     "searchPlaceholder": "Buscar apps...",
     "featured": "Mejor valoradas",
     "allCategories": "Todos",
@@ -144,7 +144,7 @@
   },
   "builders": {
     "title": "Explorá Builders",
-    "subtitle": "Descubrí qué están construyendo otros developers",
+    "subtitle": "Descubrí qué están construyendo otros builders",
     "sortLabel": "Ordenar por:",
     "mostFollowers": "Seguidores",
     "mostApps": "Apps publicadas",
@@ -190,7 +190,7 @@
     "feedLive": "En vivo",
     "feedTitle": "Lo que están construyendo",
     "feedSubtitle": "Actualizaciones reales de builders de LATAM y España",
-    "feedCta": "Ver todo el feed"
+    "feedCta": "Explorar builders"
   },
   "composer": {
     "placeholder": "¿En qué estás trabajando?",

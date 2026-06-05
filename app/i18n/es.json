@@ -10,13 +10,13 @@
     "profile": "Mi perfil"
   },
   "hero": {
-    "eyebrow": "Marketplace para devs · LATAM + España",
-    "title": "Convertí tus apps en ",
-    "titleHighlight": "ingresos reales",
-    "description": "AppGrid es la comunidad de developers de LATAM y España. Conectate con clientes, colaborá con otros devs y publicá tus apps en un solo lugar.",
-    "publishCta": "Publicá tu app →",
-    "exploreCta": "Ver marketplace"
-  },
+    "eyebrow": "Builders · Productos · LATAM + España",
+    "title": "Descubrí builders. ",
+    "titleHighlight": "Descubrí productos.",
+    "description": "La plataforma donde los creadores de software de LATAM y España muestran lo que están construyendo, comparten proyectos y conectan con nuevas audiencias.",
+    "publishCta": "Crear perfil →",
+    "exploreCta": "Explorar builders"
+    },
   "stats": {
     "appsPublished": "apps publicadas",
     "region": "LATAM + España",
@@ -27,14 +27,14 @@
   },
   "howWorks": {
     "title": "Cómo funciona",
-    "subtitle": "En tres pasos tenés tu app generando ingresos.",
-    "step1": "Publicás tu app",
-    "step1Desc": "Subís tu SaaS, script o automatización desde el panel de admin. Precio, descripción, categoría — listo.",
-    "step2": "Llegamos a compradores",
-    "step2Desc": "Tu app aparece en el marketplace frente a developers y empresas de LATAM y España buscando soluciones.",
-    "step3": "Cobrás directo",
-    "step3Desc": "El comprador paga por tu link de MercadoPago. Vos recibís el dinero y le dás acceso. Sin intermediarios."
-  },
+    "subtitle": "En tres pasos compartís tu producto con la comunidad.",
+    "step1": "Creá tu perfil",
+    "step1Desc": "Mostrá quién sos, qué construís y agregá tus productos.",
+    "step2": "Publicá tus apps",
+    "step2Desc": "Compartí tus SaaS, scripts o automatizaciones con builders y potenciales usuarios.",
+    "step3": "Ganá visibilidad",
+    "step3Desc": "Tus productos aparecen en AppGrid para que otros puedan descubrirlos, seguir tu trabajo y conocer tus avances."
+},
   "features": {
     "title": "Por qué AppGrid",
     "subtitle": "Todo lo que necesitás para monetizar tu código.",
